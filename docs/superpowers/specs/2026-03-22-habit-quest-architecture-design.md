@@ -10,11 +10,15 @@
 
 Auth for two users. Onboarding (6 screens: identity, character name, archetype, objective, conducts, invite). Daily check-in. Narrative text generation with Claude. HP decay basic. Weekly pact with signature.
 
-**Out of scope for MVP:** Design system (separate chat), image generation, video generation, rewards system, NPC memory, world map reveal.
+**Onboarding screens (6):** (1) Identity question, (2) Character name, (3) Archetype selection, (4) First arc objective, (5) Conducts with time/place, (6) Invite partner. Screens for rewards, world generation loading, and prologue are deferred.
+
+**Out of scope for MVP:** Design system (separate chat), image generation, video generation, rewards system, NPC memory, world map reveal, onboarding rewards/generation/prologue screens.
 
 ---
 
 ## Stack
+
+> **Note:** This stack supersedes Section 12 of the GDD. Key changes from GDD: Next.js 16 (was 15), Drizzle (was Prisma), Auth.js + Resend (was Supabase), Vercel (was Railway/Render). Rationale: Vercel-native stack for faster development, Drizzle for zero-codegen type safety, Auth.js for simpler magic link auth.
 
 | Layer | Technology | Why |
 |---|---|---|
@@ -122,7 +126,7 @@ These are breaking changes from Next.js 15 that must be followed:
 4. Session stored in httpOnly cookie
 5. `proxy.ts` checks session on all `(app)/` routes
 6. `lib/dal.ts` provides `verifySession()` for server actions
-7. Two users only — no registration beyond the two configured emails
+7. Two users only — allowed emails in `AUTH_ALLOWED_EMAILS` env var (comma-separated). Unrecognized emails get a generic "not authorized" message.
 
 ---
 
@@ -172,3 +176,9 @@ eslint-config-next
 ## Design System
 
 Deferred to a separate conversation. For MVP, use shadcn/ui defaults + Tailwind for layout. Framer Motion for narrative-specific animations (text reveal, scene transitions).
+
+---
+
+## Known GDD Inconsistencies
+
+- **Mago archetype** lists `INT + mana` as stats, but the stat system only defines VIT, STA, INT, STR (no mana). Needs resolution before implementing archetypes — likely maps to INT + STA or INT + VIT.
