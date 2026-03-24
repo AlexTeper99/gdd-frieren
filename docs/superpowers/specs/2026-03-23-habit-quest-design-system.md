@@ -2,67 +2,79 @@
 
 **Date:** 2026-03-23
 **Based on:** GDD v4.2, Brainstorming session
-**Status:** Approved
+**Validated against:** 30 design skills + Web Interface Guidelines + anti-AI-slop research 2026
+**Status:** Approved (v2 — with 7 critical fixes)
 
 ---
 
 ## Visual Direction
 
-Genshin Impact-style anime RPG UI with Frieren tonal palette. Semi-transparent panels floating over atmospheric CSS backgrounds. Full anime-game aesthetic: decorative borders, glow effects, archetype badges, stat bars. The Frieren influence is in the TONE (contemplative, melancholic beauty) not in making it a reading app.
+Genshin Impact-style anime RPG UI with Frieren tonal palette. Solid-color panels tinted by atmospheric state over CSS gradient backgrounds. Full anime-game aesthetic: archetype badges, stat bars, decorative dividers. The Frieren influence is in the TONE (contemplative, melancholic beauty) not in making it a reading app.
+
+**Anti-AI-slop measures:**
+- Subtle grain/noise texture overlay (2026 anti-perfection trend)
+- Display serif font (Instrument Serif) for RPG headings — breaks generic sans-serif sameness
+- Monospace font (DM Mono) for data — signals "this is a game with real numbers"
+- Solid surface colors per atmospheric state — no runtime alpha compositing
+- Glow effects ONLY on interactive states, never decorative
+- OKLCH color space for perceptual uniformity
 
 **References:** Persona 5 (color identity), Darkest Dungeon (decay UI), Ghost of Tsushima (reactive weather), Disco Elysium (narrative + stats), Honkai Star Rail (mobile RPG UI).
 
-**Signature:** Atmospheric Bleed — panels don't just float over the background, they are TINTED by it. The entire UI shifts mood with the world state.
+**Signature:** Atmospheric Bleed — panels are TINTED by the world state (warm hue in amanecer, cool in nublado, desaturated in niebla). The entire UI shifts mood.
 
 ---
 
-## Color System
+## Color System (OKLCH)
+
+All colors defined in OKLCH for perceptual uniformity. Chroma reduces toward light/dark extremes to avoid garish pastels or muddy darks. All neutrals tinted toward hue 260 (cool blue) with chroma 0.01-0.015 for brand cohesion.
 
 ### Core Palette
 
 **Gold — Primary / UI Chrome (Himmel flashbacks = achievement)**
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| gold-100 | #fdf0d0 | Light gold highlights |
-| gold-200 | #f5d98a | Bright gold, button gradient stop |
-| gold-400 | #e2c67e | Primary gold, headers, borders |
-| gold-500 | #c9a84c | Deep gold, button gradient start |
-| gold-600 | #a38a3a | Muted gold, inactive states |
-| gold-800 | #7a6728 | Dark gold, subtle accents |
+| Token | OKLCH | Use |
+|-------|-------|-----|
+| gold-100 | oklch(0.94 0.06 85) | Light gold highlights |
+| gold-200 | oklch(0.86 0.12 85) | Bright gold, button gradient stop |
+| gold-400 | oklch(0.80 0.13 85) | Primary gold, headers, borders |
+| gold-500 | oklch(0.72 0.13 85) | Deep gold, button gradient start |
+| gold-600 | oklch(0.62 0.11 85) | Muted gold, inactive states |
+| gold-800 | oklch(0.48 0.08 85) | Dark gold, subtle accents |
 
 **Lavender — Narrative / Identity (Frieren's signature color)**
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| lav-100 | #e8dff5 | Lightest lavender |
-| lav-200 | #c4b3e2 | Narrative text, light accent |
-| lav-400 | #9b87c8 | Primary lavender |
-| lav-500 | #7b68a8 | Deep lavender, chapter markers |
-| lav-600 | #5c4d82 | Muted lavender |
-| lav-800 | #3d3358 | Dark lavender |
+| Token | OKLCH | Use |
+|-------|-------|-----|
+| lav-100 | oklch(0.90 0.05 300) | Lightest lavender |
+| lav-200 | oklch(0.78 0.08 300) | Narrative text, light accent |
+| lav-400 | oklch(0.64 0.12 300) | Primary lavender |
+| lav-500 | oklch(0.54 0.12 300) | Deep lavender, chapter markers |
+| lav-600 | oklch(0.44 0.10 300) | Muted lavender |
+| lav-800 | oklch(0.32 0.08 300) | Dark lavender |
 
 **Emerald — Magic / Success (Frieren's Zoltraak spell = progress)**
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| em-100 | #d4f0e0 | Light green |
-| em-200 | #7eccaa | Medium green |
-| em-400 | #4db882 | Primary emerald |
-| em-500 | #2e9e68 | Deep emerald |
-| em-600 | #237a50 | Muted emerald |
-| em-800 | #1a5c3b | Dark emerald |
+| Token | OKLCH | Use |
+|-------|-------|-----|
+| em-100 | oklch(0.90 0.06 160) | Light green |
+| em-200 | oklch(0.78 0.10 160) | Medium green |
+| em-400 | oklch(0.70 0.14 160) | Primary emerald |
+| em-500 | oklch(0.62 0.14 160) | Deep emerald |
+| em-600 | oklch(0.52 0.12 160) | Muted emerald |
+| em-800 | oklch(0.38 0.08 160) | Dark emerald |
 
-**Blue-Grey — Base / Backgrounds**
+**Blue-Grey — Base / Backgrounds (tinted hue 260)**
 
-| Token | Hex | Use |
-|-------|-----|-----|
-| bg-100 | #d4d6dc | Primary text (bone) |
-| bg-400 | #8b8e96 | Secondary text (ash) |
-| bg-500 | #55585f | Tertiary elements |
-| bg-700 | #2a2d36 | Elevated surfaces (mist) |
-| bg-800 | #1a1c24 | Base surfaces |
-| bg-950 | #0c0e14 | App background (dusk) |
+| Token | OKLCH | Use |
+|-------|-------|-----|
+| bg-100 | oklch(0.87 0.01 260) | Primary text (bone) |
+| bg-300 | oklch(0.72 0.01 260) | Strong text |
+| bg-400 | oklch(0.60 0.01 260) | Secondary text (ash) |
+| bg-500 | oklch(0.42 0.01 260) | Tertiary elements |
+| bg-700 | oklch(0.24 0.01 260) | Elevated surfaces (mist) |
+| bg-800 | oklch(0.17 0.015 260) | Base surfaces |
+| bg-950 | oklch(0.11 0.015 260) | App background (dusk) |
 
 ### Semantic Tokens (Frieren world names)
 
@@ -88,13 +100,45 @@ Genshin Impact-style anime RPG UI with Frieren tonal palette. Semi-transparent p
 | Ranger 🏹 | Green | #4eaa64 |
 | Curandero 🌿 | Amber | #c8aa5a |
 
-### Glow Tokens
+### Foreground/Background Pairs (CRITICAL)
+
+Every background token MUST have a paired foreground token.
+
+| Background | Foreground | Contrast |
+|-----------|-----------|----------|
+| --primary (gold-400) | --primary-foreground (bg-950) | ~8:1 |
+| --secondary (lav-400) | --secondary-foreground (lav-100) | ~6:1 |
+| --destructive (oklch 0.60 0.20 25) | --destructive-foreground (oklch 0.95 0.03 25) | ~7:1 |
+| --success (em-400) | --success-foreground (oklch 0.15 0.03 160) | ~7:1 |
+| --warning (oklch 0.70 0.15 85) | --warning-foreground (oklch 0.15 0.05 85) | ~8:1 |
+| --card (bg-800) | --card-foreground (bg-100) | ~7:1 |
+| --muted-bg (bg-700) | --muted-foreground (bg-400) | ~4.5:1 AA |
+| --popover (bg-700) | --popover-foreground (bg-100) | ~7:1 |
+
+### Glow Tokens (Interactive States ONLY)
+
+Glow is NOT decorative. It only appears on :hover, :active, :focus, and brief completion flashes. Never on default/resting state.
 
 ```css
---glow-gold: 0 0 20px rgba(226,198,126,0.15), 0 0 40px rgba(226,198,126,0.05);
---glow-gold-strong: 0 0 12px rgba(226,198,126,0.25), 0 0 30px rgba(226,198,126,0.1);
---glow-zoltraak: 0 0 12px rgba(77,184,130,0.2), 0 0 24px rgba(77,184,130,0.06);
---glow-frieren: 0 0 12px rgba(155,135,200,0.15), 0 0 24px rgba(155,135,200,0.05);
+--glow-gold-interactive: 0 0 8px oklch(0.72 0.13 85 / 0.2);
+--glow-zoltraak-interactive: 0 0 8px oklch(0.70 0.14 160 / 0.15);
+```
+
+### Grain Texture Overlay
+
+Subtle SVG noise at 2.5% opacity, fixed position, covers entire viewport. Breaks AI-generated visual perfection.
+
+```css
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,...feTurbulence...");
+  background-size: 200px;
+}
 ```
 
 ---
@@ -142,15 +186,25 @@ CSS custom properties on `<body>` change with state: `--atmo-tint`, `--atmo-warm
 
 ## Surface System
 
-Genshin-style semi-transparent panels. Always let atmospheric background show through.
+Explicit solid colors per atmospheric state. NO runtime alpha compositing on Surface 1. Backdrop-blur ONLY on Surface 2/3 (elevated panels, popovers, modals).
+
+### Surface 1 — Solid Colors Per State (no blur)
+
+| State | OKLCH | Hue | Chroma |
+|-------|-------|-----|--------|
+| Amanecer | oklch(0.16 0.02 85) | Warm (85) | Medium (0.02) |
+| Nublado | oklch(0.15 0.015 260) | Cool (260) | Low (0.015) |
+| Niebla | oklch(0.13 0.005 260) | Cool (260) | Very low (0.005) |
+| Vínculo | oklch(0.14 0.03 300) | Purple (300) | Medium (0.03) |
+
+### Surface 2/3 — With Backdrop Blur (elevated only)
 
 | Level | Background | Blur | Border | Use |
 |-------|-----------|------|--------|-----|
-| Surface 1 | bg-800 at 65-75% | blur(12px) | border-default | Base panels, narrative |
-| Surface 2 | bg-700 at 75-80% | blur(16px) | border-default | Elevated panels, situation |
-| Surface 3 | bg-600 at 80-85% | blur(20px) | border-gold | Premium/focus panels |
+| Surface 2 | state-tinted at 80% | blur(16px) | border-default | Situation panel, popovers |
+| Surface 3 | state-tinted at 85% | blur(20px) | border-gold | Premium/focus panels |
 
-All surfaces include: `inset 0 1px 0 rgba(255,255,255,0.03)` for subtle top highlight + external drop shadow.
+**Key principle:** Surface 1 (the majority of panels) uses SOLID colors that change hue with atmospheric state. This is the Atmospheric Bleed signature — warm hue in amanecer, cool in nublado, desaturated in niebla. Only elevated panels (Surface 2/3) use blur for functional "floating" effect.
 
 ---
 
@@ -169,52 +223,67 @@ All surfaces include: `inset 0 1px 0 rgba(255,255,255,0.03)` for subtle top high
 
 ## Typography
 
-**Font:** Plus Jakarta Sans (single family for everything).
+**Three font families with strict roles:**
 
-| Role | Size | Weight | Tracking | Notes |
-|------|------|--------|----------|-------|
-| Display | 28px | 700 | 0.5px | Chapter titles, gold color |
-| H1 | 22px | 700 | — | Screen titles |
-| H2 | 17px | 600 | — | Section headers |
-| Narrative | 14-15px | 300 | — | line-height: 1.85, lavender color |
-| Body | 14px | 400 | — | Descriptions |
-| Caption | 12px | 500 | — | Metadata |
-| Label | 10px | 700 | 2px uppercase | UI labels |
-| Stat | 13px | 600 | — | tabular-nums, gold color |
+| Font | Role | Why |
+|------|------|-----|
+| **Instrument Serif** | Display: chapter titles, archetype names, screen titles, narrative headers | Elegant serif with calligraphic quality. Evokes medieval European fantasy through Japanese aesthetics. Breaks generic sans-serif AI sameness. |
+| **Plus Jakarta Sans** | Body/UI: labels, descriptions, buttons, captions, metadata | Clean, distinctive sans-serif. Better than Inter/Roboto but not so unusual that it hurts readability. |
+| **DM Mono** | Data: stat numbers, streak counters, timers, XP values | Monospace with tabular-nums for proper data alignment. Signals "this is game data." |
 
-**Rules:**
-- Narrative text: weight 300 + lav-200 color + line-height 1.85
-- Stat numbers: tabular-nums + gold
-- Labels: uppercase + letter-spacing 2px
-- Never italic for emphasis — use color or weight
+### Type Scale
+
+| Role | Font | Size | Weight | Tracking | Notes |
+|------|------|------|--------|----------|-------|
+| Display | Instrument Serif | 26px | 400 | 0.5px | Chapter titles, gold color |
+| H1 | Instrument Serif | 22px | 400 | — | Screen titles |
+| H2 | Plus Jakarta Sans | 17px | 600 | — | Section headers |
+| Narrative | Plus Jakarta Sans | 14-15px | 300 | — | line-height: 1.9 (dark mode +0.05), lav-200 color |
+| Body | Plus Jakarta Sans | 14px | 400 | — | Descriptions, min 16px on mobile (rem) |
+| Caption | Plus Jakarta Sans | 12px | 500 | — | Metadata |
+| Label | Plus Jakarta Sans | 10px | 700 | 2px uppercase | UI labels |
+| Stat | DM Mono | 13px | 500 | — | tabular-nums, gold color |
+
+### Rules
+- Narrative text: PJS weight 300 + lav-200 color + line-height 1.9 (extra 0.05 for dark backgrounds)
+- Stat numbers: DM Mono + tabular-nums + gold
+- Chapter titles: Instrument Serif + italic for extra character
+- Archetype names: Instrument Serif italic + archetype color
+- Labels: PJS uppercase + letter-spacing 2px
 - `text-wrap: balance` on headings
+- All sizes in rem, not px
+- `font-display: swap` on all web fonts with metric-matched fallbacks
 
 ---
 
 ## Border System
 
-| Token | Value | Use |
+Explicit OKLCH colors, not rgba alpha (avoids unpredictable contrast on tinted surfaces).
+
+| Token | OKLCH | Use |
 |-------|-------|-----|
-| --border-subtle | rgba(255,255,255, 0.04) | Dividers within panels |
-| --border-default | rgba(255,255,255, 0.07) | Panel edges, card borders |
-| --border-strong | rgba(255,255,255, 0.12) | Hover states, input borders |
-| --border-gold | rgba(226,198,126, 0.15) | Premium surfaces, pact cards |
-| --border-focus | rgba(155,135,200, 0.5) | Focus-visible rings (lavender) |
+| --border-subtle | oklch(0.22 0.01 260) | Dividers within panels |
+| --border-default | oklch(0.26 0.01 260) | Panel edges, card borders |
+| --border-strong | oklch(0.32 0.01 260) | Hover states, input borders |
+| --border-gold | oklch(0.40 0.06 85) | Premium surfaces, pact cards |
+| --border-focus | oklch(0.55 0.12 300) | Focus-visible rings (Frieren lavender) |
 
 ---
 
 ## Form Controls
 
-| Token | Value | Use |
-|-------|-------|-----|
-| --control-bg | rgba(12, 14, 20, 0.6) | Input/textarea background (inset) |
-| --control-border | rgba(255,255,255, 0.1) | Default input border |
-| --control-border-hover | rgba(255,255,255, 0.18) | Hover |
-| --control-border-focus | rgba(226,198,126, 0.4) | Focus (gold) |
-| --control-border-error | rgba(224, 92, 92, 0.5) | Validation error |
-| --control-placeholder | #44474f | Placeholder text |
+Dedicated tokens separate from surface tokens. Inputs feel "inset" (darker than surroundings).
 
-**Rules:** Labels always visible (never placeholder-only). Placeholders end with `…`. Inset shadow on inputs for "recessed" feel. Gold focus border.
+| Token | OKLCH | Use |
+|-------|-------|-----|
+| --control-bg | oklch(0.10 0.015 260) | Input/textarea background (inset, darker) |
+| --control-border | oklch(0.28 0.01 260) | Default input border |
+| --control-border-hover | oklch(0.34 0.01 260) | Hover |
+| --control-border-focus | oklch(0.55 0.10 85) | Focus (gold) |
+| --control-border-error | oklch(0.50 0.15 25) | Validation error |
+| --control-placeholder | oklch(0.30 0.01 260) | Placeholder text (4.5:1 contrast on dark) |
+
+**Rules:** Labels always visible (never placeholder-only). Placeholders end with `…`. Inset shadow (`inset 0 2px 4px oklch(0 0 0 / 0.15)`) for "recessed" feel. Gold focus border. `inputmode` set correctly. `spellcheck="true"` on narrative fields. Never block paste.
 
 ---
 
@@ -325,19 +394,39 @@ Framer Motion. Contemplative pace for narrative, snappy for interactions.
 | Slow | 800ms | ease-in-out | Atmospheric transition |
 | Narrative | 1200-2000ms | spring(0.4,0,0.2,1) | Text reveal, scene transition |
 
+**Spring configuration — NO BOUNCE:**
+```
+// Critically-damped spring (no overshoot)
+type: "spring", stiffness: 300, damping: 30, mass: 1
+
+// OR duration-based with ease-out-expo
+type: "tween", duration: 0.3, ease: [0.16, 1, 0.3, 1]
+```
+NEVER use default Framer Motion springs (they bounce). NEVER use elastic/bounce easing.
+
+**Animation frequency rule (Rauno Freiberg):**
+
+| Frequency | Action | Animation Level |
+|-----------|--------|----------------|
+| Very high (3x/day) | Conduct tap ✓ | Minimal: color change + scale 0.97, 100ms. NO glow. |
+| High (daily) | Open app, read scene | Moderate: stagger fade-in 30ms/item, typewriter |
+| Medium (weekly) | Boss, pact seal | Rich: stamp animation, gold glow, stagger |
+| Low (monthly/rare) | Arc close, bond, world gen | Theatrical: full atmospheric shift, slow reveals |
+
 **Key animations:**
 - Typewriter: 30ms/char for narrative text
-- Conduct tap: scale 1.05 → emerald flood → scale back (async, never blocks)
-- Stat gain toast: slide up, hold 2s, fade out
-- Stats panel: slide down, bars animate 0→value
+- Conduct tap: scale 0.97 + color change, 100ms. Async, never blocks. NO glow, NO particles.
+- Stat gain toast: slide up (transform only), hold 2s, fade out
+- Stats panel: slide down, bars animate width 0→value
 - Atmospheric shift: crossfade over 3-5 seconds
-- Pact seal: scale 1.3→1.0 with rotation
-- Bond scene: UI fades to black → lavender glow → text slowly
-- Stagger: list items enter with 30-50ms delay each
-- Scale feedback: 0.97-0.98 on press for buttons/cards
-- Exit faster than enter (60-70% of enter duration)
+- Pact seal: scale 1.3→1.0 with rotation (weekly = rich animation justified)
+- Bond scene: UI fades to black → lavender glow → text slowly (rare = theatrical justified)
+- Stagger: list items enter with 30-50ms delay, capped at 500ms total
+- Scale feedback: 0.97 on press for buttons/cards
+- Exit animations: 70% of enter duration
+- Only animate transform and opacity. Never width/height/padding/margin.
 
-**prefers-reduced-motion:** All animations instant. Typewriter skips. No transitions.
+**prefers-reduced-motion:** All animations instant. Typewriter skips. No transitions. Grain texture hidden.
 
 ---
 
