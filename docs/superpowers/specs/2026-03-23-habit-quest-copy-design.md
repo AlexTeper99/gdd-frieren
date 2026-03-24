@@ -290,7 +290,7 @@ Pantalla oscura. Texto aparece como si se escribiera.
 | # | Variante |
 |---|---|
 | A | "El ritual no se rompe. Se adapta." |
-| B | ★ "Mismo objetivo, distinto camino." |
+| B | ★ "Mismo rumbo, distinto camino." |
 | C | "Mejor un plan B que ningún plan." |
 
 **Placeholder contingencia:** "Desayuno simple, pero real."
