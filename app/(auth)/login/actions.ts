@@ -2,6 +2,8 @@
 
 import { signIn } from "@/lib/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
+import { getCopy } from "@/lib/copy";
+import { VALIDATION_EMAIL } from "@/lib/copy/errors";
 
 export async function loginWithEmail(
   previousState: { error: string } | null,
@@ -10,7 +12,7 @@ export async function loginWithEmail(
   const email = formData.get("email") as string;
 
   if (!email) {
-    return { error: "Email is required" };
+    return { error: getCopy(VALIDATION_EMAIL) };
   }
 
   try {
