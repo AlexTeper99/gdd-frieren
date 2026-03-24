@@ -57,7 +57,7 @@ async function generateNarrative(
         content: JSON.stringify(context),
       },
     ],
-    maxTokens: 1024,
+    maxOutputTokens: 1024,
   })
 
   return text
