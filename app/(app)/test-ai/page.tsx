@@ -1,12 +1,26 @@
 "use client";
 
-import { useChat } from "ai/react";
+import { useChat } from "@ai-sdk/react";
+import { DefaultChatTransport } from "ai";
+import { useState, useMemo } from "react";
 
 export default function TestAIPage() {
-  const { messages, input, handleInputChange, handleSubmit, isLoading } =
-    useChat({
-      api: "/api/ai/test",
-    });
+  const transport = useMemo(
+    () => new DefaultChatTransport({ api: "/api/ai/test" }),
+    []
+  );
+
+  const { messages, sendMessage, status } = useChat({ transport });
+  const [input, setInput] = useState("");
+
+  const isLoading = status === "streaming" || status === "submitted";
+
+  function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!input.trim() || isLoading) return;
+    sendMessage({ text: input });
+    setInput("");
+  }
 
   return (
     <div className="mx-auto flex min-h-screen max-w-2xl flex-col gap-4 p-8">
@@ -21,15 +35,18 @@ export default function TestAIPage() {
           <div
             key={m.id}
             className={`rounded-lg p-3 ${
-              m.role === "user"
-                ? "bg-primary/10 ml-12"
-                : "bg-muted mr-12"
+              m.role === "user" ? "bg-primary/10 ml-12" : "bg-muted mr-12"
             }`}
           >
             <p className="text-xs font-medium opacity-50">
               {m.role === "user" ? "Tú" : "Narrador"}
             </p>
-            <p className="mt-1 whitespace-pre-wrap text-sm">{m.content}</p>
+            <p className="mt-1 whitespace-pre-wrap text-sm">
+              {m.parts
+                .filter((part) => part.type === "text")
+                .map((part) => part.text)
+                .join("")}
+            </p>
           </div>
         ))}
       </div>
@@ -37,7 +54,7 @@ export default function TestAIPage() {
       <form onSubmit={handleSubmit} className="flex gap-2">
         <textarea
           value={input}
-          onChange={handleInputChange}
+          onChange={(e) => setInput(e.target.value)}
           placeholder="Describí una escena o hacé una pregunta al narrador..."
           rows={2}
           className="border-input bg-background flex-1 resize-none rounded-md border px-3 py-2 text-sm"
