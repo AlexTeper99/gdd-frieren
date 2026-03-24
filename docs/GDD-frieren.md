@@ -15,8 +15,8 @@ Claude API · Nano Banana · Veo 3.1 · Next.js · Para uso personal
 
 1. [El Problema Real](#01-el-problema-real)
 2. [La Idea Central: Vivís un RPG Real](#02-la-idea-central-vivís-un-rpg-real)
-3. [Identidad, Objetivo y Conductas](#03-identidad-objetivo-y-conductas)
-4. [Los Hábitos: Estructura Completa](#04-los-hábitos-estructura-completa)
+3. [Identidad, Objetivo y Rituales](#03-identidad-objetivo-y-rituales)
+4. [Los Rituales: Estructura Completa](#04-los-rituales-estructura-completa)
 5. [El Pacto Semanal — Redefinido](#05-el-pacto-semanal--redefinido)
 6. [El Sistema de Stats y Loop de Juego](#06-el-sistema-de-stats-y-loop-de-juego)
 7. [La Mecánica de Escritura — D&D Reducido](#07-la-mecánica-de-escritura--dd-reducido)
@@ -80,17 +80,17 @@ La frase sigue siendo verdad — pero también podés escribir algo épico. Lo q
 | Arquetipo | Esencia | Stats | Hábitos sugeridos |
 |---|---|---|---|
 | ⚔️ **Guerrero** | Construís con el cuerpo. Tu disciplina es física. | STR + VIT | Alimentación, ejercicio. |
-| 🧙 **Mago** | Construís con la mente. Tu disciplina es mental. | INT + mana | Sueño, hidratación. |
+| 🧙 **Mago** | Construís con la mente. Tu disciplina es mental. | INT + STA | Sueño, hidratación. |
 | 🏹 **Ranger** | Construís en movimiento. Tu disciplina es adaptación. | Balance | Combinación flexible de todos. |
 | 🌿 **Curandero** | Construís desde adentro. Tu disciplina es cuidado. | VIT + STA | Alimentación antiinflamatoria, descanso. |
 
-Los hábitos sugeridos por arquetipo se usan como **pre-fill en el onboarding** — no son obligatorios. El usuario puede editarlos libremente. Sirven para que la elección de clase tenga peso real más allá de lo cosmético.
+Los rituales sugeridos por arquetipo se usan como **pre-fill en el onboarding** — no son obligatorios. El usuario puede editarlos libremente. **El arquetipo es solo narrativo y estético:** determina los rituales sugeridos, cómo la IA narra el personaje, y el look visual. No afecta las mecánicas de stats (no hay multiplicadores por clase).
 
 ---
 
-## 03. Identidad, Objetivo y Conductas
+## 03. Identidad, Objetivo y Rituales
 
-Atomic Habits dice que el orden correcto es **identidad → objetivo → conductas**. La mayoría arranca por los resultados ("quiero bajar de peso"), define el proceso ("voy a hacer dieta"), y espera que la identidad venga sola. Clear dice que eso está al revés. El cambio duradero empieza por decidir quién querés ser.
+Atomic Habits dice que el orden correcto es **identidad → objetivo → rituales**. La mayoría arranca por los resultados ("quiero bajar de peso"), define el proceso ("voy a hacer dieta"), y espera que la identidad venga sola. Clear dice que eso está al revés. El cambio duradero empieza por decidir quién querés ser.
 
 > *"Primero decidís quién sos. Después el hábito es simplemente la evidencia de esa decisión."*
 
@@ -104,13 +104,13 @@ Ejemplo: *"Soy alguien que cuida cómo vive — lo que come, cómo se mueve."*
 El área de foco del arco actual. Un área, no varias. Cambia cada mes según el progreso.
 Ejemplo: *"Este mes me enfoco en alimentación."*
 
-**Conductas**
+**Rituales**
 Las acciones concretas con hora y lugar que sirven ese objetivo. Pueden ser varias siempre que todas apunten al mismo objetivo.
 Ejemplo: preparar desayuno 7:30am, llevar almuerzo el domingo a la noche, no comprar procesados.
 
-### Por qué múltiples conductas bajo un objetivo no es lo mismo que múltiples hábitos
+### Por qué múltiples rituales bajo un objetivo no es lo mismo que múltiples hábitos
 
-La distinción crítica es si las conductas compiten por identidades distintas o sirven a la misma. Tres conductas que todas sirven a "alimentarme mejor" apuntan en una sola dirección. El esfuerzo cognitivo no se divide — se concentra. Si un día fallás el almuerzo pero hiciste el desayuno, seguís votando por la misma identidad. Un voto menos, no un frente colapsado.
+La distinción crítica es si los rituales compiten por identidades distintas o sirven a la misma. Tres rituales que todos sirven a "alimentarme mejor" apuntan en una sola dirección. El esfuerzo cognitivo no se divide — se concentra. Si un día fallás el almuerzo pero hiciste el desayuno, seguís votando por la misma identidad. Un voto menos, no un frente colapsado.
 
 En cambio, alimentación + entrenamiento + sueño en el mismo arco son tres identidades distintas con señales distintas, entornos distintos, fricción distinta. El esfuerzo cognitivo se divide y ninguna llega a la automaticidad.
 
@@ -120,19 +120,19 @@ Un segundo objetivo mensual se agrega cuando el primero llegó a la **automatici
 
 ---
 
-## 04. Los Hábitos: Estructura Completa
+## 04. Los Rituales: Estructura Completa
 
 Atomic Habits llama a esto **implementation intention**. La fórmula exacta es:
 
-> *"Voy a [CONDUCTA] a las [HORA] en [LUGAR]."*
+> *"Voy a [RITUAL] a las [HORA] en [LUGAR]."*
 
-Sin hora y lugar, el hábito queda flotando — siempre "más tarde", siempre "cuando pueda". La especificidad multiplica drásticamente la probabilidad de ejecución.
+Sin hora y lugar, el ritual queda flotando — siempre "más tarde", siempre "cuando pueda". La especificidad multiplica drásticamente la probabilidad de ejecución.
 
-### La fórmula completa de cada conducta
+### La fórmula completa de cada ritual
 
 | Campo | Descripción |
 |---|---|
-| **Qué** | La conducta concreta. No "comer mejor" — "preparar mi propio desayuno". |
+| **Qué** | El ritual concreto. No "comer mejor" — "preparar mi propio desayuno". |
 | **Cuándo** | Hora específica. La notificación llega exactamente en ese momento. |
 | **Dónde** | Lugar específico. Activa la señal ambiental que dispara el hábito. |
 | **Si no puedo** | El contingency planning de Clear. "Si el miércoles tengo reunión a las 7am, lo hago a las 6:45 o en el hotel con lo que haya." El objetivo no baja — la implementación se adapta. |
@@ -144,7 +144,7 @@ Identidad: "Soy alguien que cuida lo que come."
 
 Objetivo del arco 1: Alimentación.
 
-Conductas:
+Rituales:
   Preparar mi desayuno. Lunes a viernes, 7:30am, mi cocina.
   Llevar almuerzo preparado. Domingo noche, 9pm, mi cocina.
   Si no pude preparar: elegir bien cuando como afuera — no delivery procesado.
@@ -160,7 +160,7 @@ Identidad: "Soy alguien que cuida su cuerpo."
 
 Objetivo del arco 2 (después de 60+ días con alimentación): Movimiento.
 
-Conductas:
+Rituales:
   Entrenamiento. Martes y jueves, 7pm, gimnasio.
   Movimiento outdoor. Sábado, 9am, parque.
   Si no pude ir al gym: 20 minutos donde sea. Día de marcha, no de rendición.
@@ -174,18 +174,18 @@ Clear lo dice explícitamente: el mayor predictor de si alguien mantiene un háb
 
 ## 05. El Pacto Semanal — Redefinido
 
-Había una confusión de diseño que se corrige acá: el pacto semanal **NO** es una versión reducida del hábito. No da permiso para ceder. No toca el objetivo ni las conductas. Son dos capas completamente distintas.
+Había una confusión de diseño que se corrige acá: el pacto semanal **NO** es una versión reducida del hábito. No da permiso para ceder. No toca el objetivo ni los rituales. Son dos capas completamente distintas.
 
-> **El objetivo no negocia. Las conductas se adaptan. El pacto planifica los obstáculos.**
+> **El objetivo no negocia. Los rituales se adaptan. El pacto planifica los obstáculos.**
 
 ### Qué responde cada capa
 
 | Capa | Qué responde |
 |---|---|
 | **El hábito** | Quién querés ser y qué vas a hacer concretamente. Fijo. No negocia. Definido en el onboarding con hora, lugar y contingencia. |
-| **El pacto semanal** | No toca el hábito. Responde: qué tiene esta semana que puede dificultar las conductas, cómo se planifican esos obstáculos, y cómo los dos se sostienen mutuamente en ese contexto específico. |
-| **Las conductas** | Se registran individualmente con un tap a lo largo del día, disparadas por notificaciones a la hora exacta que definiste. 2 segundos cada una. Alimentan los stats directamente. |
-| **La decisión narrativa** | Una vez al día, cuando quieras. La IA presenta la situación, escribís 1-2 oraciones. Bien/Regular/Difícil se calcula automáticamente de las conductas registradas. |
+| **El pacto semanal** | No toca el hábito. Responde: qué tiene esta semana que puede dificultar los rituales, cómo se planifican esos obstáculos, y cómo los dos se sostienen mutuamente en ese contexto específico. |
+| **Los rituales** | Se registran individualmente con un tap a lo largo del día, disparados por notificaciones a la hora exacta que definiste. 2 segundos cada uno. Alimentan los stats directamente. |
+| **La decisión narrativa** | Una vez al día, cuando quieras. La IA presenta la situación, escribís 1-2 oraciones. Bien/Regular/Difícil se calcula automáticamente de los rituales registrados — pero es invisible al usuario. |
 
 ### Cómo evoluciona el pacto semana a semana
 
@@ -207,7 +207,7 @@ Había una confusión de diseño que se corrige acá: el pacto semanal **NO** es
 
 ### Las cuatro preguntas del pacto
 
-1. **Obstáculos** — ¿Qué tiene esta semana que puede dificultar las conductas?
+1. **Obstáculos** — ¿Qué tiene esta semana que puede dificultar los rituales?
 2. **Plan** — ¿Cómo cada uno maneja esos obstáculos concretos?
 3. **Apoyo mutuo** — ¿Cómo se sostienen entre sí durante esa semana específica?
 4. **Opcional** — ¿Quieren sumar algo pequeño esta semana sobre el hábito base?
@@ -218,14 +218,22 @@ Había una confusión de diseño que se corrige acá: el pacto semanal **NO** es
 
 ## 06. El Sistema de Stats y Loop de Juego
 
-### Los cuatro stats mapeados a áreas de vida
+### Los cuatro stats primarios + Poder
 
-| Stat | Área | Conductas que lo alimentan |
+Cada ritual alimenta un stat **primario** (boost grande) y stats **secundarios** (boost chico). Cocinar no solo sube VIT — también sube INT un poco (planificaste, te organizaste). Esto hace que todos los stats se muevan desde el día 1.
+
+| Stat | Área | Rituales que lo alimentan |
 |---|---|---|
 | 💚 **VIT — Vitalidad** | Alimentación | Cocinar comida real, comer con intención, no saltear comidas. |
 | 💧 **STA — Stamina** | Hidratación | Vasos de agua diarios, evitar bebidas azucaradas. |
 | 🧠 **INT — Inteligencia** | Sueño | Horas dormidas, horario consistente, rutina nocturna. |
 | 💪 **STR — Fuerza** | Movimiento | Ejercicio, caminata, actividad física de cualquier tipo. |
+
+**Poder** es un stat derivado que no se alimenta directamente con ningún ritual. Se calcula del promedio de los 4 stats primarios + la racha. Representa el nivel general del personaje — qué tan listo está para lo que venga. La IA usa Poder para gatear los momentos épicos: Poder alto = épica disponible, Poder bajo = el mundo resiste.
+
+### Racha como multiplicador global
+
+La racha no es solo un contador. Cada día consecutivo con todos los rituales completos da un **boost pasivo a todos los stats**. Esto hace que la consistencia se sienta como progresión de personaje completa, no como llenar una barra individual.
 
 ### Decay rate — el mundo decae si no lo alimentás
 
@@ -239,9 +247,9 @@ Había una confusión de diseño que se corrige acá: el pacto semanal **NO** es
 ### El loop central
 
 ```
-Conductas: tap ✓ a lo largo del día (2 seg cada una)
+Rituales: tap ✓ a lo largo del día (2 seg cada uno)
         ↓
-Stats suben con cada conducta registrada
+Stats suben con cada ritual registrado
         ↓
 Decisión narrativa: cuando quieras, escribís 1-2 oraciones
         ↓
@@ -256,13 +264,11 @@ El mundo avanza o se complica
 
 | Tipo | Descripción |
 |---|---|
-| **Conductas** | Tap ✓ individual por cada conducta, disparado por notificación a la hora exacta. 2 segundos. Alimenta stats directamente. |
-| **Daily Quest** | Escribís tu decisión del día cuando quieras. La IA cruza con los stats (alimentados por las conductas). Los turnos de escritura alternan entre los dos jugadores. Bien/Regular/Difícil se calcula automáticamente de las conductas del día. |
+| **Rituales** | Tap ✓ individual por cada ritual, disparado por notificación a la hora exacta. 2 segundos. Alimenta stats directamente. |
+| **Daily Quest** | Escribís tu decisión del día cuando quieras. La IA cruza con los stats (alimentados por los rituales). Los turnos de escritura alternan entre los dos jugadores. El nivel del día se calcula internamente de los rituales — invisible al usuario. |
 | **Weekly Close** | Cierre narrativo de la semana. Siempre disponible el domingo. Incluye el ritual del pacto y, si corresponde, la escena de vínculo. El domingo pasa sí o sí — el loop social no se bloquea. |
 | **Weekly Boss** | El boss fight del domingo. Los dos escriben su decisión **por separado, sin ver la del otro**. La IA fusiona las decisiones y cruza con los stats combinados de los 7 días. **Gated: solo se desbloquea si los stats están en verde.** Si no se desbloqueó, la narrativa lo refleja — el boss sigue ahí, la puerta sigue cerrada. |
 | **Monthly Arc** | La historia del mes. Resolución determinada por quién fuiste durante los 28-30 días y las decisiones escritas. Ni vos sabés el final. |
-| **Streak Shield** | Ganado con 7 días consecutivos. Protege una vez si la racha se rompe. No se acumula. |
-| **Recovery Quest** | Se activa cuando la racha se rompe por 2+ días. Una misión narrativa concreta: la IA genera un desafío específico al personaje que refleja lo que se perdió. Completar el check-in del día siguiente con nivel "Bien" activa la quest. Recuperás parcialmente los stats perdidos (50%) y la zona/NPC afectado empieza a volver, pero lento — no es un reset instantáneo. La narrativa lo trata como reconstrucción, no como si nada hubiera pasado. |
 
 ### Cómo interactúan Weekly Close y Weekly Boss
 
@@ -299,11 +305,11 @@ Esto es más poderoso que D&D porque el dado no lo podés mentir. Tus hábitos t
 
 ### Las dos interacciones del día — ritmos distintos
 
-**Las conductas se registran por separado, con un tap, a lo largo del día.** Cada conducta tiene su hora y su notificación. Cuando llega, abrís la app, tocás ✓, cerrás. 2 segundos. Cada tap alimenta los stats directamente.
+**Los rituales se registran por separado, con un tap, a lo largo del día.** Cada ritual tiene su hora y su notificación. Cuando llega, abrís la app, tocás ✓, cerrás. 2 segundos. Cada tap alimenta los stats directamente.
 
-**La decisión narrativa se escribe una vez al día, cuando quieras.** No está atada a una hora ni a que hayas completado las conductas. Podés escribir a la mañana, al mediodía o a la noche. Las conductas que ya registraste cuentan para los stats al momento de generar la consecuencia. Las que registres después también suman.
+**La decisión narrativa se escribe una vez al día, cuando quieras.** No está atada a una hora ni a que hayas completado los rituales. Podés escribir a la mañana, al mediodía o a la noche. Los rituales que ya registraste cuentan para los stats al momento de generar la consecuencia. Los que registres después también suman.
 
-El nivel del día (Bien / Regular / Difícil) se **calcula automáticamente** de las conductas registradas. No es un input manual.
+El nivel del día (Bien / Regular / Difícil) se **calcula internamente** de los rituales registrados. **No se muestra al usuario** — es solo un input para la IA.
 
 ### El loop de escritura
 
@@ -315,9 +321,9 @@ El nivel del día (Bien / Regular / Difícil) se **calcula automáticamente** de
 
 > *"Kael toma el camino de la izquierda. Confía en que está listo."*
 
-**Paso 3 — La IA cruza tu decisión con tus stats (alimentados por las conductas) y genera la consecuencia**
+**Paso 3 — La IA cruza tu decisión con tus stats (alimentados por los rituales) y genera la consecuencia**
 
-La escritura toma menos de 1 minuto. Las conductas se registraron por separado a lo largo del día.
+La escritura toma menos de 1 minuto. Los rituales se registraron por separado a lo largo del día.
 
 ### Cómo los stats determinan el resultado
 
@@ -383,19 +389,19 @@ Miércoles → Kael escribe la decisión del día
 ```
 
 **Cuando es tu turno:**
-- Registrás tus conductas con tap a lo largo del día (cada una a su hora)
+- Registrás tus rituales con tap a lo largo del día (cada uno a su hora)
 - Cuando quieras: la IA presenta la situación desde donde la dejó el otro ayer
 - Escribís tu decisión (1-2 oraciones)
 - La IA genera la consecuencia cruzando tu decisión con tus stats
 
 **Cuando no es tu turno:**
-- Registrás tus conductas con tap igual — el registro es diario para los dos
+- Registrás tus rituales con tap igual — el registro es diario para los dos
 - Abrís la app y leés la escena del otro — lo que decidió y cómo salió
 - No hay situación para escribir ese día
 
 Esto crea algo que no existía antes: **cada uno lee la decisión del otro**. Cuando abrís la app y ves lo que ella decidió, estás entrando al mismo mundo desde donde ella lo dejó. Es colaboración genuina — una sola historia construida en capas, un día cada uno.
 
-El registro de conductas sigue siendo diario para los dos, independiente de los turnos de escritura.
+El registro de rituales sigue siendo diario para los dos, independiente de los turnos de escritura.
 
 ### El boss semanal — cada uno propone, la historia elige
 
@@ -438,7 +444,7 @@ El personaje enfrenta la consecuencia con entereza. No es patético ni destruido
 | **1 día malo** | Niebla que vuelve. Un NPC que no aparece. El camino más pesado. Urgencia suave. | Tus decisiones escritas tienen un costo leve aunque sean buenas. |
 | **2 días seguidos** | Consecuencia visible y concreta. Un aliado se preocupa. Urgencia dramática real. | Las decisiones arriesgadas empiezan a fallar parcialmente. |
 | **3 días o más** | Algo concreto se pierde. Una zona se cierra. Un NPC se distancia. El arco se complica. | Solo las decisiones más seguras y conservadoras salen bien. La épica no está disponible. |
-| **Recuperación** | Gradual, no instantánea. El personaje tiene que ganarse de vuelta lo que perdió. La Recovery Quest inicia el camino pero la reconstrucción lleva días. | Los stats vuelven a subir, los resultados mejoran progresivamente. |
+| **Recuperación** | Gradual, no instantánea. El personaje tiene que ganarse de vuelta lo que perdió. La reconstrucción lleva días. | Los stats vuelven a subir, los resultados mejoran progresivamente. |
 
 ### El tono correcto — tres ejemplos
 
@@ -488,7 +494,7 @@ Cada vez que la IA genera una escena, recibe el estado de los dos y sus decision
 
 ### La escena de vínculo — el premio que no se pide
 
-Cuando los dos tienen 5 días consecutivos cumpliendo sus conductas, esa noche la app no manda una notificación de logro. Solo:
+Cuando los dos tienen 5 días consecutivos cumpliendo sus rituales, esa noche la app no manda una notificación de logro. Solo:
 
 > *"Esta noche, algo especial ocurrió en Valdris."*
 
@@ -612,7 +618,7 @@ El hábito tiene que generar anticipación antes de hacerlo. Temptation bundling
 
 La fricción mata los hábitos. Regla de los dos minutos: el hábito tiene que poder empezar en dos minutos o menos. Contingency planning para los días difíciles.
 
-**En la app:** Las conductas son un tap de 2 segundos cada una — fricción casi nula. La decisión narrativa se escribe cuando quieras, sin horario fijo. La IA sugiere pactos más pequeños si el compromiso es demasiado ambicioso. El contingency planning está en la definición del hábito, no en el pacto. Nunca dos veces seguidas: un día malo no rompe el hábito — dos días sí empiezan a romperlo.
+**En la app:** Los rituales son un tap de 2 segundos cada uno — fricción casi nula. La decisión narrativa se escribe cuando quieras, sin horario fijo. La IA sugiere pactos más pequeños si el compromiso es demasiado ambicioso. El contingency planning está en la definición del ritual, no en el pacto. Nunca dos veces seguidas: un día malo no rompe el ritual — dos días sí empiezan a romperlo.
 
 ### Ley 4 — Hacerlo satisfactorio (la recompensa)
 
@@ -635,7 +641,7 @@ El hábito deja de requerir esfuerzo consciente. La app lo reconoce narrativamen
 El enemigo de largo plazo no es la dificultad sino el aburrimiento. El hábito es repetitivo — la historia nunca lo es. Dos escenas iguales no existen en el sistema.
 
 **Revisión periódica**
-El cierre de arco mensual permite ajustar el hábito, cambiar el foco, agregar conductas nuevas. La historia escucha: *"El reino cambió este mes. ¿Qué querés que el próximo capítulo revele?"*
+El cierre de arco mensual permite ajustar el hábito, cambiar el foco, agregar rituales nuevos. La historia escucha: *"El reino cambió este mes. ¿Qué querés que el próximo capítulo revele?"*
 
 ---
 
@@ -657,12 +663,12 @@ Cuatro opciones con ilustración generada. Descripción de esencia, no de mecán
 | Arquetipo | Esencia | Stats | Hábitos sugeridos |
 |---|---|---|---|
 | ⚔️ Guerrero | Construís con el cuerpo. Tu disciplina es física. | STR + VIT | Alimentación, ejercicio. |
-| 🧙 Mago | Construís con la mente. Tu disciplina es mental. | INT + mana | Sueño, hidratación. |
+| 🧙 Mago | Construís con la mente. Tu disciplina es mental. | INT + STA | Sueño, hidratación. |
 | 🏹 Ranger | Construís en movimiento. Tu disciplina es adaptación. | Balance | Combinación flexible. |
 | 🌿 Curandero | Construís desde adentro. Tu disciplina es cuidado. | VIT + STA | Alimentación antiinflamatoria, descanso. |
 
-**Pantalla 4 — Objetivo y conductas**
-Arriba: en qué área querés enfocarte este primer mes. Cuatro sugerencias **pre-llenadas según el arquetipo elegido** + campo libre editable. La IA recibe texto libre. Abajo: hasta 3 conductas. Cada una pide: qué, cuándo, dónde, y opcionalmente qué hacés si ese día no podés. Las sugerencias de conducta también se pre-llenan según arquetipo pero son 100% editables. Estas generan las notificaciones específicas.
+**Pantalla 4 — Misión del arco y rituales**
+Arriba: en qué área querés enfocarte este primer mes. Cuatro sugerencias **pre-llenadas según el arquetipo elegido** + campo libre editable. La IA recibe texto libre. Abajo: hasta 3 rituales. Cada uno pide: qué, cuándo, dónde, y opcionalmente qué hacés si ese día no podés. Las sugerencias de ritual también se pre-llenan según arquetipo pero son 100% editables. Estos generan las notificaciones específicas.
 
 **Pantalla 5 — Invitar**
 Link o código para la otra persona. Ella hace su propio onboarding completo. Cuando los dos confirman, la IA genera el mundo compartido.
@@ -690,9 +696,9 @@ La pantalla siempre tiene: la situación del día o la consecuencia de ayer (tex
 
 ---
 
-### Las conductas — tap a lo largo del día
+### Los rituales — tap a lo largo del día
 
-Cada conducta tiene su hora y su notificación contextualizada. El texto no es genérico — está escrito en el tono de Frieren.
+Cada ritual tiene su hora y su notificación contextualizada. El texto no es genérico — está escrito en el tono de Frieren.
 
 ```
 7:30am → notificación: "Kael, el desayuno espera. Tu cocina, 7:30."
@@ -702,25 +708,25 @@ Cada conducta tiene su hora y su notificación contextualizada. El texto no es g
       → abrís → tap ✓ → VIT +3 → cerrás (2 segundos)
 ```
 
-Cada tap alimenta los stats directamente. El nivel del día se calcula solo: todas las conductas ✓ = Bien. Algunas = Regular. Ninguna = Difícil.
+Cada tap alimenta los stats directamente. El nivel del día se calcula internamente (todas los rituales ✓ = Bien, algunas = Regular, ninguna = Difícil) pero **no se muestra al usuario**. Es solo un input para la IA al calibrar la consecuencia narrativa.
 
 ---
 
 ### La decisión narrativa — cuando quieras
 
-La escritura no tiene horario fijo. Podés escribir a la mañana con solo 1 conducta hecha, o a la noche con todas completas. La IA usa los stats al momento de generar la consecuencia.
+La escritura no tiene horario fijo. Podés escribir a la mañana con solo 1 ritual hecho, o a la noche con todas completas. La IA usa los stats al momento de generar la consecuencia.
 
 ```
 Es tu turno:
 Abrís la app (cuando quieras) →
-Ves las conductas ya registradas como pills (✓ Desayuno, ○ Almuerzo) →
+Ves los rituales ya registrados como pills (✓ Desayuno, ○ Almuerzo) →
 La IA presenta la situación (desde donde lo dejó el otro ayer) →
 Escribís tu decisión (1-2 oraciones) →
 La IA genera la consecuencia cruzando tu decisión con tus stats
 
 No es tu turno:
 Abrís la app → Leés la escena de ayer (la decisión del otro + cómo salió) →
-Registrás tus conductas con tap si no lo hiciste →
+Registrás tus rituales con tap si no lo hiciste →
 Listo — el mundo avanza mañana con tu turno
 ```
 
@@ -881,9 +887,9 @@ MVP primero. Cada semana agrega una capa nueva solo cuando la anterior funciona 
 
 | Semana | Foco | Qué se buildea |
 |---|---|---|
-| **Semana 1 — MVP core** | Fundación | Auth de dos usuarios. Onboarding completo (7 pantallas) con identidad primero, arquetipos con hábitos sugeridos. Un objetivo + hasta 3 conductas con hora. Check-in básico. Narrativa de texto con Claude. HP decay básico. Sin escritura todavía. Sin imágenes todavía. |
+| **Semana 1 — MVP core** | Fundación | Auth de dos usuarios. Onboarding completo (7 pantallas) con identidad primero, arquetipos con rituales sugeridos. Un objetivo + hasta 3 rituales con hora. Check-in básico. Narrativa de texto con Claude. HP decay básico. Sin escritura todavía. Sin imágenes todavía. |
 | **Semana 2 — Escritura** | La mecánica central | La IA genera situaciones diarias. El usuario escribe su decisión. La IA cruza decisión + stats y genera consecuencia. El registro y la escritura se fusionan. |
-| **Semana 3 — Consecuencias** | El sistema tiene dientes | Escala de consecuencias según días sin registro (1/2/3+). Las consecuencias afectan las situaciones futuras. Streak tracking real. Streak Shield. Recovery Quest. |
+| **Semana 3 — Consecuencias** | El sistema tiene dientes | Escala de consecuencias según días sin registro (1/2/3+). Las consecuencias afectan las situaciones futuras. Streak tracking real. |
 | **Semana 4 — Co-op y pacto** | La historia se comparte | Ritual del pacto semanal con firma. Turnos alternados de escritura. Boss semanal compartido con decisiones fusionadas. Pantalla Nosotros. |
 | **Semana 5 — Visual** | El mundo cobra vida | Integración Nano Banana. Imagen diaria generada. Fondo dinámico reactivo al estado del mundo. UI atmosférica. |
 | **Semana 6 — Vínculo** | El premio que no se pide | Detector de racha de 5 días combinada. Escena de vínculo especial. Integración Veo 3.1 asincrónico. Notificación de cinemática lista. |
