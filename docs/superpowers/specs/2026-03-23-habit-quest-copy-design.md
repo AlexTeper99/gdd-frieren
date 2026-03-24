@@ -486,14 +486,16 @@ Templates con variables: `[nombre]` = nombre del personaje, `[ritual]` = nombre 
 
 ## 6. Ritual del domingo
 
-### Labels de pasos
+**UI: Escenas secuenciales que se desbloquean.** No es un stepper numerado. El usuario solo ve la escena actual — la siguiente no existe hasta completar la anterior.
 
-| Paso | Variante A | ★ Variante B | Variante C |
+### Títulos de escenas
+
+| Escena | Variante A | ★ Variante B | Variante C |
 |---|---|---|---|
-| 1 | "Cierre semanal" | "Lo que pasó esta semana" | "Cierre de la semana" |
-| 2 | "Boss semanal" | "El boss" | "Boss de la semana" |
-| 3 | "Nuevo pacto" | "El pacto" | "Pacto de la semana" |
-| 4 | "Firma" | "Sellar" | "La firma" |
+| Cierre | "Cierre semanal" | "Lo que pasó esta semana" | "Cierre de la semana" |
+| Boss | "Boss semanal" | "El boss" | "Boss de la semana" |
+| Pacto | "Nuevo pacto" | "El pacto" | "Pacto de la semana" |
+| Firma | "Firma" | "Sellar" | "La firma" |
 
 ### Las 4 preguntas del pacto
 
