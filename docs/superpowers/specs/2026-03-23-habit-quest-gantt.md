@@ -44,7 +44,7 @@
 | 1 | 🟢 DevOps | 1.1 Infra (Vercel + Postgres + Resend) | ☐ | |
 | 2 | 🟣 UX/UI | 1.3 Design System (paleta Frieren, typo, dark theme, tokens) | ☐ | |
 | 3 | 🟡 Copy | 1.7 Extraer textos GDD (onboarding, microcopy, notifs, pacto) | ☐ | |
-| 4 | 🔵 Prompt | 1.8 System prompt v1 (Frieren calibrado, 3 modos narrativos) | ☐ | |
+| 4 | 🔵 Prompt | 1.8 System prompt v1 (Frieren calibrado, 3 modos narrativos) | ✅ | Base + 7 módulos + 26 tests (9 unit + 17 integration). Vercel AI SDK. |
 | 5 | 🔴 Full | 1.5 Schema + Types + DAL (11 tablas Drizzle, types, queries) | ☐ | |
 
 ---
