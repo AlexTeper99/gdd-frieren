@@ -19,14 +19,14 @@
 **Files:**
 - Modify: `package.json`
 
-- [ ] **Step 1: Install @auth/drizzle-adapter and server-only**
+- [x] **Step 1: Install @auth/drizzle-adapter and server-only**
 
 Run:
 ```bash
 pnpm add @auth/drizzle-adapter server-only
 ```
 
-- [ ] **Step 2: Verify installation**
+- [x] **Step 2: Verify installation**
 
 Run:
 ```bash
@@ -34,7 +34,7 @@ pnpm list @auth/drizzle-adapter server-only
 ```
 Expected: Both packages appear in output
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add package.json pnpm-lock.yaml
@@ -47,7 +47,7 @@ git commit -m "chore: add @auth/drizzle-adapter and server-only dependencies"
 
 These steps must be run interactively by the user. They cannot be automated because they require account switching and interactive prompts.
 
-- [ ] **Step 1: Switch Vercel account**
+- [x] **Step 1: Switch Vercel account**
 
 ```bash
 vercel logout
@@ -55,7 +55,7 @@ vercel login
 ```
 Select the correct account when prompted.
 
-- [ ] **Step 2: Link project**
+- [x] **Step 2: Link project**
 
 ```bash
 vercel link
@@ -67,21 +67,21 @@ When prompted:
 
 Expected: `.vercel/` directory created with `project.json`
 
-- [ ] **Step 3: Create Vercel Postgres database**
+- [x] **Step 3: Create Vercel Postgres database**
 
 ```bash
 vercel postgres create habit-quest-db
 ```
 When prompted, select the default region. This auto-creates env vars on Vercel.
 
-- [ ] **Step 4: Generate AUTH_SECRET**
+- [x] **Step 4: Generate AUTH_SECRET**
 
 ```bash
 npx auth secret
 ```
 Copy the generated value.
 
-- [ ] **Step 5: Add manual env vars to Vercel**
+- [x] **Step 5: Add manual env vars to Vercel**
 
 ```bash
 vercel env add AUTH_SECRET production preview development
@@ -91,7 +91,7 @@ vercel env add AUTH_RESEND_KEY production preview development
 For `AUTH_ALLOWED_EMAILS`, enter the two emails comma-separated.
 For `AUTH_RESEND_KEY`, enter the API key from resend.com dashboard.
 
-- [ ] **Step 6: Pull all env vars to local**
+- [x] **Step 6: Pull all env vars to local**
 
 ```bash
 vercel pull
@@ -103,7 +103,7 @@ Copy to `.env.local`:
 cp .vercel/.env.development.local .env.local
 ```
 
-- [ ] **Step 7: Verify env vars are present**
+- [x] **Step 7: Verify env vars are present**
 
 Check `.env.local` has these keys:
 - `POSTGRES_URL`
@@ -119,7 +119,7 @@ Check `.env.local` has these keys:
 **Files:**
 - Modify: `.env.local.example`
 
-- [ ] **Step 1: Update env template to match Vercel-generated names**
+- [x] **Step 1: Update env template to match Vercel-generated names**
 
 Replace entire `.env.local.example` with:
 
@@ -139,7 +139,7 @@ AUTH_RESEND_KEY=
 ANTHROPIC_API_KEY=
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add .env.local.example
@@ -154,7 +154,7 @@ git commit -m "chore: update env template to match Vercel Postgres naming"
 - Create: `drizzle.config.ts`
 - Create: `lib/db/index.ts`
 
-- [ ] **Step 1: Create drizzle.config.ts**
+- [x] **Step 1: Create drizzle.config.ts**
 
 ```ts
 import { defineConfig } from "drizzle-kit";
@@ -170,7 +170,7 @@ export default defineConfig({
 });
 ```
 
-- [ ] **Step 2: Create DB client at lib/db/index.ts**
+- [x] **Step 2: Create DB client at lib/db/index.ts**
 
 ```ts
 import { neon } from "@neondatabase/serverless";
@@ -182,14 +182,14 @@ const sql = neon(process.env.POSTGRES_URL!);
 export const db = drizzle({ client: sql, schema });
 ```
 
-- [ ] **Step 3: Create empty schema placeholder at lib/db/schema.ts**
+- [x] **Step 3: Create empty schema placeholder at lib/db/schema.ts**
 
 ```ts
 // Auth.js tables will be defined in Task 5
 // GDD tables will be added in Phase 1.5
 ```
 
-- [ ] **Step 4: Verify Drizzle can connect**
+- [x] **Step 4: Verify Drizzle can connect**
 
 Run:
 ```bash
@@ -197,7 +197,7 @@ pnpm db:push
 ```
 Expected: Success (no tables to push yet, but connection works). If it fails, check `POSTGRES_URL` in `.env.local`.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add drizzle.config.ts lib/db/index.ts lib/db/schema.ts
@@ -213,7 +213,7 @@ git commit -m "feat: add Drizzle config and DB client with Neon driver"
 
 Ref: https://authjs.dev/getting-started/adapters/drizzle — the Drizzle adapter requires these 4 tables defined explicitly.
 
-- [ ] **Step 1: Define Auth.js tables in schema.ts**
+- [x] **Step 1: Define Auth.js tables in schema.ts**
 
 ```ts
 import {
@@ -282,7 +282,7 @@ export const verificationTokens = pgTable(
 );
 ```
 
-- [ ] **Step 2: Push schema to database**
+- [x] **Step 2: Push schema to database**
 
 Run:
 ```bash
@@ -290,7 +290,7 @@ pnpm db:push
 ```
 Expected: 4 tables created (users, accounts, sessions, verification_tokens)
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/db/schema.ts
@@ -301,7 +301,7 @@ git commit -m "feat: add Auth.js tables to Drizzle schema"
 
 ### Task 6: First deploy — verify infra
 
-- [ ] **Step 1: Deploy to Vercel**
+- [x] **Step 1: Deploy to Vercel**
 
 Run:
 ```bash
@@ -309,7 +309,7 @@ vercel deploy
 ```
 Expected: Successful build and deploy. Preview URL works (shows default Next.js page).
 
-- [ ] **Step 2: Verify**
+- [x] **Step 2: Verify**
 
 Open the preview URL in browser. Default Next.js page loads without errors.
 
@@ -323,7 +323,7 @@ Open the preview URL in browser. Default Next.js page loads without errors.
 - Create: `lib/auth/index.ts`
 - Create: `app/api/auth/[...nextauth]/route.ts`
 
-- [ ] **Step 1: Create Auth.js config at lib/auth/index.ts**
+- [x] **Step 1: Create Auth.js config at lib/auth/index.ts**
 
 ```ts
 import NextAuth from "next-auth";
@@ -358,7 +358,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 });
 ```
 
-- [ ] **Step 2: Create API route handler**
+- [x] **Step 2: Create API route handler**
 
 Create directory structure first:
 ```bash
@@ -373,7 +373,7 @@ import { handlers } from "@/lib/auth";
 export const { GET, POST } = handlers;
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/auth/index.ts "app/api/auth/[...nextauth]/route.ts"
@@ -389,7 +389,7 @@ git commit -m "feat: add Auth.js config with Resend provider and email whitelist
 
 Per Next.js 16 docs: proxy.ts must be at project root. Uses optimistic cookie check only — no DB calls.
 
-- [ ] **Step 1: Write proxy.ts test**
+- [x] **Step 1: Write proxy.ts test**
 
 Create `__tests__/proxy.test.ts`:
 
@@ -423,7 +423,7 @@ describe("proxy matcher", () => {
 });
 ```
 
-- [ ] **Step 2: Run test to verify it fails**
+- [x] **Step 2: Run test to verify it fails**
 
 Run:
 ```bash
@@ -431,7 +431,7 @@ pnpm test:run __tests__/proxy.test.ts
 ```
 Expected: FAIL — `proxy` module not found
 
-- [ ] **Step 3: Create proxy.ts at project root**
+- [x] **Step 3: Create proxy.ts at project root**
 
 ```ts
 import { NextResponse } from "next/server";
@@ -468,7 +468,7 @@ export const config = {
 };
 ```
 
-- [ ] **Step 4: Run test to verify it passes**
+- [x] **Step 4: Run test to verify it passes**
 
 Run:
 ```bash
@@ -476,7 +476,7 @@ pnpm test:run __tests__/proxy.test.ts
 ```
 Expected: PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add proxy.ts __tests__/proxy.test.ts
@@ -492,7 +492,7 @@ git commit -m "feat: add proxy.ts with optimistic auth cookie check"
 
 Per Next.js 16 auth guide: proxy does optimistic checks, DAL does real validation with `auth()`.
 
-- [ ] **Step 1: Create lib/dal.ts**
+- [x] **Step 1: Create lib/dal.ts**
 
 ```ts
 import "server-only";
@@ -512,7 +512,7 @@ export const verifySession = cache(async () => {
 });
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add lib/dal.ts
@@ -528,7 +528,7 @@ git commit -m "feat: add DAL with verifySession for server-side auth"
 - Create: `app/(auth)/login/actions.ts`
 - Create: `app/(auth)/layout.tsx`
 
-- [ ] **Step 1: Create auth layout**
+- [x] **Step 1: Create auth layout**
 
 Create `app/(auth)/layout.tsx`:
 
@@ -546,7 +546,7 @@ export default function AuthLayout({
 }
 ```
 
-- [ ] **Step 2: Create login server action**
+- [x] **Step 2: Create login server action**
 
 Create `app/(auth)/login/actions.ts`:
 
@@ -579,7 +579,7 @@ export async function loginWithEmail(
 }
 ```
 
-- [ ] **Step 3: Create login page**
+- [x] **Step 3: Create login page**
 
 Create `app/(auth)/login/page.tsx`:
 
@@ -627,7 +627,7 @@ export default function LoginPage() {
 }
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/\(auth\)/
@@ -641,7 +641,7 @@ git commit -m "feat: add login page with email magic link form"
 **Files:**
 - Create: `app/(auth)/verify/page.tsx`
 
-- [ ] **Step 1: Create verify page**
+- [x] **Step 1: Create verify page**
 
 Create `app/(auth)/verify/page.tsx`:
 
@@ -658,7 +658,7 @@ export default function VerifyPage() {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add app/\(auth\)/verify/
@@ -673,7 +673,7 @@ git commit -m "feat: add verify page for magic link confirmation"
 - Modify: `app/page.tsx` → move to `app/(app)/page.tsx`
 - Create: `app/(app)/layout.tsx`
 
-- [ ] **Step 1: Create app route group layout**
+- [x] **Step 1: Create app route group layout**
 
 Create `app/(app)/layout.tsx`:
 
@@ -692,7 +692,7 @@ export default async function AppLayout({
 }
 ```
 
-- [ ] **Step 2: Create placeholder El Mundo page**
+- [x] **Step 2: Create placeholder El Mundo page**
 
 Create `app/(app)/page.tsx`:
 
@@ -713,7 +713,7 @@ export default async function ElMundoPage() {
 }
 ```
 
-- [ ] **Step 3: Create sign-out button**
+- [x] **Step 3: Create sign-out button**
 
 Create `app/(app)/_components/sign-out-button.tsx`:
 
@@ -739,11 +739,11 @@ export function SignOutButton() {
 }
 ```
 
-- [ ] **Step 4: Remove old app/page.tsx**
+- [x] **Step 4: Remove old app/page.tsx**
 
 Delete `app/page.tsx` (the default Next.js boilerplate).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/\(app\)/ && git rm app/page.tsx
@@ -754,14 +754,14 @@ git commit -m "feat: add protected El Mundo placeholder with session check"
 
 ### Task 13: End-to-end verification
 
-- [ ] **Step 1: Run all tests**
+- [x] **Step 1: Run all tests**
 
 ```bash
 pnpm test:run
 ```
 Expected: All tests pass
 
-- [ ] **Step 2: Run dev server locally**
+- [x] **Step 2: Run dev server locally**
 
 ```bash
 pnpm dev
@@ -774,7 +774,7 @@ Verify:
 4. Click magic link → redirected to `/` → sees "Welcome, {email}"
 5. Enter non-whitelisted email → error or no email received
 
-- [ ] **Step 3: Deploy to production**
+- [x] **Step 3: Deploy to production**
 
 ```bash
 vercel deploy --prod
@@ -782,7 +782,7 @@ vercel deploy --prod
 
 Verify same flow on `habit-quest-mocha.vercel.app`.
 
-- [ ] **Step 4: Final commit if any fixes were needed**
+- [x] **Step 4: Final commit if any fixes were needed**
 
 ```bash
 git add -A
