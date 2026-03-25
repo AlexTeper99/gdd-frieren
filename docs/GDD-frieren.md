@@ -267,21 +267,23 @@ El mundo avanza o se complica
 | **Rituales** | Tap ✓ individual por cada ritual, disparado por notificación a la hora exacta. 2 segundos. Alimenta stats directamente. |
 | **Daily Quest** | Escribís tu decisión del día cuando quieras. La IA cruza con los stats (alimentados por los rituales). Los turnos de escritura alternan entre los dos jugadores. El nivel del día se calcula internamente de los rituales — invisible al usuario. |
 | **Weekly Close** | Cierre narrativo de la semana. Siempre disponible el domingo. Incluye el ritual del pacto y, si corresponde, la escena de vínculo. El domingo pasa sí o sí — el loop social no se bloquea. |
-| **Weekly Boss** | El boss fight del domingo. Los dos escriben su decisión **por separado, sin ver la del otro**. La IA fusiona las decisiones y cruza con los stats combinados de los 7 días. **Gated: solo se desbloquea si los stats están en verde.** Si no se desbloqueó, la narrativa lo refleja — el boss sigue ahí, la puerta sigue cerrada. |
+| **Weekly Boss** | El boss fight del domingo. **Siempre disponible** — el boss se enfrenta todas las semanas. Los dos escriben su decisión **por separado, sin ver la del otro**. La IA fusiona las decisiones y cruza con los stats combinados de los 7 días. El resultado varía según los stats: épica si están verdes, victoria con costo si regulares, derrota narrativa con consecuencias si bajos. No es binario ganar/perder — es un espectro. |
 | **Monthly Arc** | La historia del mes. Resolución determinada por quién fuiste durante los 28-30 días y las decisiones escritas. Ni vos sabés el final. |
 
 ### Cómo interactúan Weekly Close y Weekly Boss
 
+El domingo siempre tiene los tres momentos: cierre narrativo, boss, y pacto. Lo que cambia es el tono y el resultado del boss según los stats de la semana.
+
 **Buena semana (stats en verde):**
-Weekly Close (cierre narrativo + pacto nuevo + posible escena de vínculo) + Weekly Boss desbloqueado (momento épico). El domingo tiene dos capas.
+Weekly Close celebra el progreso. Weekly Boss: épica disponible, las decisiones arriesgadas pueden salir bien. Posible escena de vínculo si ambos tienen 5+ días de racha.
 
 **Semana regular:**
-Weekly Close normalmente. El Weekly Boss queda sin resolver. La narrativa lo menciona: la puerta sigue cerrada, el desafío espera.
+Weekly Close con tono neutro. Weekly Boss: el enfrentamiento es más difícil, las decisiones conservadoras funcionan pero las arriesgadas tienen costo. Se pasa, pero queda marca.
 
 **Mala semana:**
-Weekly Close con tono de consecuencia. El Weekly Boss se complica o desaparece — algo se perdió. Pero el pacto sigue funcionando: los dos pueden firmar el juramento nuevo y planificar la semana que viene.
+Weekly Close con consecuencias visibles. Weekly Boss: derrota narrativa. Algo concreto se pierde — un NPC, una zona, un recurso. Las consecuencias se arrastran a la semana siguiente. El personaje enfrenta la derrota con dignidad, no con vergüenza.
 
-> La consecuencia es real. El loop social nunca se bloquea.
+> La consecuencia es real. El domingo siempre es significativo. El loop social nunca se bloquea.
 
 ---
 
