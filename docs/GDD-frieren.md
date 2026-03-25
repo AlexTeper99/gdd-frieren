@@ -653,121 +653,133 @@ El cierre de arco mensual permite ajustar el hábito, cambiar el foco, agregar r
 
 ### Onboarding — El Origen (una vez, 3-5 minutos)
 
-**Pantalla 1 — La llegada**
+**Pantalla 0 — La llegada**
 Pantalla negra. Texto que aparece solo, como si se escribiera: *"Toda historia empieza con una decisión."* Un solo botón. Sin logo todavía. Sin nombre de la app. Solo la pregunta.
 
+**Pantalla 1 — El arquetipo**
+Cuatro opciones con ilustración generada. Descripción de esencia, no de mecánicas. Se elige por resonancia — la selección pre-llena los rituales sugeridos en la pantalla 3. El arquetipo **no muestra stats** al usuario porque es solo narrativo y estético.
+
+| Arquetipo | Esencia | Rituales sugeridos |
+|---|---|---|
+| ⚔️ Guerrero | Construís con el cuerpo. Tu disciplina es física. | Alimentación, ejercicio. |
+| 🧙 Mago | Construís con la mente. Tu disciplina es mental. | Sueño, hidratación. |
+| 🏹 Ranger | Construís en movimiento. Tu disciplina es adaptación. | Combinación flexible. |
+| 🌿 Curandero | Construís desde adentro. Tu disciplina es cuidado. | Alimentación antiinflamatoria, descanso. |
+
 **Pantalla 2 — Identidad y personaje**
-Dos campos en una misma pantalla. Primero: *"¿Quién querés ser al final de este año?"* Campo libre. Sin sugerencias. Que lo piensen. Debajo: *"¿Cómo se llama tu personaje?"* Campo libre. *"No tiene que ser tu nombre real. Puede serlo."* La identidad declarada alimenta todo lo que viene. El nombre es el primer acto de identidad consciente.
+Dos campos en una misma pantalla. Primero: *"¿Quién querés ser al final de este año?"* Campo libre. Sin sugerencias. Que lo piensen. La identidad se declara después del arquetipo para que la elección de esencia informe la declaración. Debajo: *"¿Cómo se llama tu personaje?"* Campo libre. *"No tiene que ser tu nombre real. Puede serlo."*
 
-**Pantalla 3 — El arquetipo**
-Cuatro opciones con ilustración generada. Descripción de esencia, no de mecánicas. Se elige por resonancia con la identidad ya declarada.
+**Pantalla 3 — Misión del arco y rituales**
+Arriba: en qué área querés enfocarte este primer mes. Sugerencias **pre-llenadas según el arquetipo elegido** + campo libre editable. La IA recibe texto libre. Abajo: hasta 3 rituales. Cada uno pide: qué, cuándo, dónde, y opcionalmente qué hacés si ese día no podés. Las sugerencias de ritual también se pre-llenan según arquetipo pero son 100% editables. Estos generan las notificaciones específicas.
 
-| Arquetipo | Esencia | Stats | Hábitos sugeridos |
-|---|---|---|---|
-| ⚔️ Guerrero | Construís con el cuerpo. Tu disciplina es física. | STR + VIT | Alimentación, ejercicio. |
-| 🧙 Mago | Construís con la mente. Tu disciplina es mental. | INT + STA | Sueño, hidratación. |
-| 🏹 Ranger | Construís en movimiento. Tu disciplina es adaptación. | Balance | Combinación flexible. |
-| 🌿 Curandero | Construís desde adentro. Tu disciplina es cuidado. | VIT + STA | Alimentación antiinflamatoria, descanso. |
-
-**Pantalla 4 — Misión del arco y rituales**
-Arriba: en qué área querés enfocarte este primer mes. Cuatro sugerencias **pre-llenadas según el arquetipo elegido** + campo libre editable. La IA recibe texto libre. Abajo: hasta 3 rituales. Cada uno pide: qué, cuándo, dónde, y opcionalmente qué hacés si ese día no podés. Las sugerencias de ritual también se pre-llenan según arquetipo pero son 100% editables. Estos generan las notificaciones específicas.
-
-**Pantalla 5 — Invitar**
+**Pantalla 4 — Invitar**
 Link o código para la otra persona. Ella hace su propio onboarding completo. Cuando los dos confirman, la IA genera el mundo compartido.
 
-**Pantalla 6 — Generación del mundo**
+**Pantalla 5 — Generación del mundo**
 15-20 segundos de loading narrativo. *"Nombrando el reino... Dando vida a los primeros habitantes... Escribiendo el primer capítulo..."* No es loading — es que algo está naciendo.
 
-**Pantalla 7 — El prólogo**
+**Pantalla 6 — El prólogo**
 Texto de 3-4 párrafos generado por IA. Primera imagen del mundo con Nano Banana. El personaje, el reino, la amenaza inicial, el arco del mes. Ni vos sabés cómo termina. Un botón: Comenzar.
 
 ---
 
-### Pantalla principal — El Mundo (cada vez que abrís)
+### Pantalla principal — El Mundo como Campamento
 
-Fondo dinámico generado diariamente. La UI respira con el estado del mundo:
+El Mundo es un **campamento interactivo** — una escena visual con objetos tapeables que funcionan como navegación. No hay barra de navegación inferior ni dashboard. El campamento ES la interfaz, inspirado en DinoTaeng (en.dinotaeng.com). La atmósfera visual del campamento respira con el estado del mundo (amanecer/nublado/niebla/vínculo).
 
-| Estado | Atmósfera visual |
-|---|---|
-| Los dos bien | Amanecer, tonos dorados, luz cálida. Caminos abiertos. |
-| Uno regular | Cielo parcialmente nublado. Tonos fríos pero no amenazantes. |
-| Los dos flojos | Niebla, gris oscuro. Atmosférico. Urgente pero no punitivo. |
-| Escena de vínculo | UI completamente distinta. Sin botones. Sin interfaz. Solo la escena. |
+**Objetos del campamento:**
 
-La pantalla siempre tiene: la situación del día o la consecuencia de ayer (texto narrativo), el pacto activo (discreto, arriba), y el botón de acción (abajo, grande).
+| Objeto | Visual | Función |
+|---|---|---|
+| **Fogata** | Fuego central con troncos y piedras | Registrar rituales diarios (tap ✓) |
+| **Personaje** | Avatar con pose/arma de arquetipo | Ver identidad + stats + tracker de rituales (ficha de personaje) |
+| **Crónicas** | Libro/tomo | Leer historia pasada (diario estilo periódico) + escribir decisión narrativa |
+| **Pacto** | Pergamino enrollado con sello de lacre | Ver pacto semanal sellado / hacer ritual del domingo |
+| **Frieren** | NPC sentada cerca del fuego | Aparece solo cuando hay decisión pendiente (tu turno o boss). Lleva a Crónicas para escribir. |
+
+**Menú hamburguesa** (sutil, arriba izquierda): slide panel con acceso textual a todos los objetos + Nosotros + Configuración.
+
+**Estados de Frieren:**
+- Visible + notificación pulsante = hay decisión pendiente
+- Transparente/ghost = no es tu turno, nada pendiente
+
+**Señales del domingo:** Crónicas brilla (cierre listo) → Frieren aparece (boss) → Pacto brilla (hora de firmar).
 
 ---
 
-### Los rituales — tap a lo largo del día
+### Los rituales — Fogata
 
-Cada ritual tiene su hora y su notificación contextualizada. El texto no es genérico — está escrito en el tono de Frieren.
+Cada ritual tiene su hora y su notificación contextualizada en tono Frieren. Registrar rituales se hace en la **Fogata** del campamento.
 
 ```
-7:30am → notificación: "Kael, el desayuno espera. Tu cocina, 7:30."
-      → abrís → tap ✓ → VIT +3 → cerrás (2 segundos)
-
-12:30  → notificación: "¿Trajiste el almuerzo preparado?"
-      → abrís → tap ✓ → VIT +3 → cerrás (2 segundos)
+Notificación llega a la hora exacta →
+Abrís la app → tap Fogata → tap ✓ en el ritual → cerrás (2 segundos)
 ```
 
 Cada tap alimenta los stats directamente. El nivel del día se calcula internamente (todas los rituales ✓ = Bien, algunas = Regular, ninguna = Difícil) pero **no se muestra al usuario**. Es solo un input para la IA al calibrar la consecuencia narrativa.
 
 ---
 
-### La decisión narrativa — cuando quieras
+### La decisión narrativa — Crónicas + Frieren
 
 La escritura no tiene horario fijo. Podés escribir a la mañana con solo 1 ritual hecho, o a la noche con todas completas. La IA usa los stats al momento de generar la consecuencia.
 
 ```
 Es tu turno:
-Abrís la app (cuando quieras) →
-Ves los rituales ya registrados como pills (✓ Desayuno, ○ Almuerzo) →
-La IA presenta la situación (desde donde lo dejó el otro ayer) →
+Abrís la app → Campamento →
+Frieren visible (notificación pulsante) →
+Tap Frieren O abrir Crónicas →
+Leés la situación (AI, desde donde lo dejó el otro ayer) →
 Escribís tu decisión (1-2 oraciones) →
-La IA genera la consecuencia cruzando tu decisión con tus stats
+La IA genera la consecuencia cruzando tu decisión con tus stats →
+La consecuencia aparece en Crónicas como nueva escena →
+Volvés al campamento
 
 No es tu turno:
-Abrís la app → Leés la escena de ayer (la decisión del otro + cómo salió) →
-Registrás tus rituales con tap si no lo hiciste →
+Abrís la app → Campamento →
+Frieren NO visible (ghost) →
+Abrís Crónicas → Leés la escena de ayer (la decisión del otro + consecuencia) →
+Registrás rituales en Fogata si no lo hiciste →
 Listo — el mundo avanza mañana con tu turno
 ```
 
-El botón de escritura tiene texto contextual según la hora:
-
-- Mañana: *"¿Qué decide Kael hoy?"*
-- Mediodía: *"El camino sigue. ¿Cómo avanza?"*
-- Noche: *"¿Cómo termina este capítulo?"*
-
-Al confirmar: *"El reino toma nota."* La pantalla muestra la consecuencia generada.
+**Crónicas** funciona como diario/periódico scrolleable ("Crónicas de Valdris") con todas las escenas pasadas ordenadas cronológicamente, cada una con día, turno, título y texto narrativo. La situación actual del día (si es tu turno) aparece destacada arriba con botón para escribir.
 
 ---
 
-### El ritual del domingo — Weekly Close + Weekly Boss
+### El ritual del domingo — Weekly Close + Boss + Pacto
 
-**Paso 1 — Revisión (Weekly Close)**
-La IA generó un cierre narrativo de la semana que termina. Si los dos tuvieron buena racha, la escena de vínculo está disponible aquí — motor emocional antes del nuevo juramento.
+Siempre 4 pasos, secuenciales. Cada paso vive en su objeto del campamento. El usuario controla el ritmo — puede volver al campamento entre pasos.
 
-**Paso 2 — El boss semanal (si corresponde)**
-Si los stats de ambos están en verde, la IA presenta la situación del boss. Los dos la leen por separado y escriben su decisión **sin ver la del otro** — cada uno en su propio dispositivo. Cuando los dos confirmaron, la IA aplica la lógica de fusión: fusiona si son compatibles, elige por stats si son contradictorias, narra el conflicto si son opuestas. El resultado usa los stats combinados de los 7 días. Este es el clímax semanal.
+**Paso 1 — Cierre semanal (Crónicas)**
+Crónicas brilla en el campamento. La IA generó un cierre narrativo de la semana. El tono varía según stats: celebratorio (verdes), neutro (regulares), consecuencias visibles (bajos). Si los dos tuvieron buena racha (5+ días), la escena de vínculo está disponible aquí.
 
-**Paso 3 — El juramento**
-Dos campos separados. Cada uno escribe su compromiso en lenguaje natural: qué tiene la semana, cómo lo maneja, cómo se apoyan. La IA genera el Pacto narrativo cuando los dos confirmaron.
+**Paso 2 — Boss semanal (Frieren)**
+Frieren aparece después del cierre. **El boss siempre está disponible** — todas las semanas. Los dos leen la situación por separado y escriben su decisión **sin ver la del otro**. La IA aplica la lógica de fusión. El **resultado varía según stats combinados de los 7 días**: victoria épica (verdes), victoria con costo (regulares), derrota con consecuencias que se arrastran (bajos). No es binario — es un espectro.
 
-**Paso 4 — La firma**
-Ambos tocan "Firmar". Efecto visual de sello en pergamino. El pacto queda fijado hasta el próximo domingo.
+**Paso 3 — El pacto (Pacto)**
+Pacto brilla después del boss. Cada uno responde 4 preguntas por separado: obstáculos de la semana, plan para manejarlos, apoyo mutuo, opcional. La IA genera el Pacto narrativo cuando los dos completaron.
+
+**Paso 4 — La firma (Pacto)**
+Tap para firmar tu parte. Cuando el otro también firma, el pergamino se sella con lacre. Asincrónico — cada uno hace su domingo en su propio tiempo.
+
+**Estados del pacto entre semana:**
+- Sellado: pergamino con 4 respuestas + firmas + lacre + "X días restantes"
+- Esperando firma: pergamino escrito, lacre como círculo punteado, "Kael ✓ · Lyra pendiente"
 
 ---
 
-### Navegación mínima — tres secciones adicionales
+### Ficha de personaje
 
-**Historial**
-Todas las escenas y consecuencias organizadas por mes. Como leer los capítulos de un libro que viviste y coescribiste. Las escenas de vínculo marcadas especialmente.
+Tap en tu personaje en el campamento. Vista única scrolleable (no tabs):
+1. **Identidad** — la declaración del onboarding
+2. **Stats** — Poder (derivado, central) + VIT/STR/INT/STA + racha
+3. **Tracker de rituales** — cada ritual con nombre, hora/lugar, racha individual, calendario de 7 días (✓/✕/hoy)
+4. **Editar/agregar rituales**
 
-**El Mundo**
-NPCs encontrados, mapa revelado, arco en curso. Compendio narrativo — no dashboard de stats.
+### Nosotros
 
-**Nosotros**
-Solo en co-op. Los dos personajes, el pacto activo, la racha combinada, una línea de la IA que describe quiénes son los dos en este momento de la historia.
+Solo en co-op. Accesible desde menú hamburguesa. Los dos personajes, el pacto activo, la racha combinada, una línea de la IA que describe quiénes son los dos en este momento de la historia.
 
 ---
 
