@@ -1,53 +1,94 @@
 "use client";
 
-import { useState, useActionState } from "react";
+import { useState } from "react";
 import { saveMission, saveRitual } from "@/lib/actions/onboarding";
 
 const CATEGORIES = ["Sueño", "Alimentación", "Movimiento", "Mente", "Cuidado"];
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
 
+type RitualEntry = {
+  id: string;
+  descripcion: string;
+  dias: string[];
+  horaInicio: string;
+  horaFin: string;
+  lugar: string;
+};
+
 type Props = {
-  rituals: { id: string; descripcion: string }[];
+  rituals: RitualEntry[];
   onComplete: () => void;
 };
 
 export function StepMission({ rituals: initialRituals, onComplete }: Props) {
   const [category, setCategory] = useState("");
-  const [rituals, setRituals] = useState(initialRituals);
+  const [rituals, setRituals] = useState<RitualEntry[]>(initialRituals);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Form fields as controlled state
+  const [descripcion, setDescripcion] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
-
-  async function handleSaveMission() {
-    const fd = new FormData();
-    fd.set("misionCategoria", category);
-    const result = await saveMission(fd);
-    if (result.success && rituals.length > 0) onComplete();
-    return result;
-  }
-
-  async function handleAddRitual(formData: FormData) {
-    selectedDays.forEach((d) => formData.append("dias", d));
-    const result = await saveRitual(formData);
-    if (result.success) {
-      setRituals((prev) => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          descripcion: formData.get("descripcion") as string,
-        },
-      ]);
-    }
-    return result;
-  }
-
-  const [ritualState, ritualAction, ritualPending] = useActionState(
-    (_prev: unknown, formData: FormData) => handleAddRitual(formData),
-    null
-  );
+  const [horaInicio, setHoraInicio] = useState("");
+  const [horaFin, setHoraFin] = useState("");
+  const [lugar, setLugar] = useState("");
 
   function toggleDay(day: string) {
     setSelectedDays((prev) =>
       prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
     );
+  }
+
+  function resetForm() {
+    setDescripcion("");
+    setSelectedDays([]);
+    setHoraInicio("");
+    setHoraFin("");
+    setLugar("");
+    setError(null);
+  }
+
+  async function handleAddRitual() {
+    if (!descripcion || !selectedDays.length || !horaInicio || !horaFin || !lugar) {
+      setError("Completá todos los campos del ritual");
+      return;
+    }
+
+    setSaving(true);
+    setError(null);
+
+    const fd = new FormData();
+    fd.set("descripcion", descripcion);
+    selectedDays.forEach((d) => fd.append("dias", d));
+    fd.set("horaInicio", horaInicio);
+    fd.set("horaFin", horaFin);
+    fd.set("lugar", lugar);
+
+    const result = await saveRitual(fd);
+
+    if (result.success) {
+      setRituals((prev) => [
+        ...prev,
+        { id: crypto.randomUUID(), descripcion, dias: selectedDays, horaInicio, horaFin, lugar },
+      ]);
+      resetForm();
+    } else {
+      setError(result.error ?? "Error al guardar");
+    }
+
+    setSaving(false);
+  }
+
+  function removeRitual(id: string) {
+    setRituals((prev) => prev.filter((r) => r.id !== id));
+  }
+
+  async function handleNext() {
+    if (!category || rituals.length === 0) return;
+    const fd = new FormData();
+    fd.set("misionCategoria", category);
+    const result = await saveMission(fd);
+    if (result.success) onComplete();
   }
 
   return (
@@ -77,6 +118,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
         ))}
       </div>
 
+      {/* Ritual list */}
       {rituals.length > 0 && (
         <>
           <label className="mb-2 block font-mono text-xs uppercase opacity-40">
@@ -85,9 +127,21 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           {rituals.map((r) => (
             <div
               key={r.id}
-              className="mb-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+              className="mb-2 flex items-start gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
             >
-              {r.descripcion}
+              <div className="flex-1">
+                <div className="text-sm font-medium">{r.descripcion}</div>
+                <div className="text-[10px] opacity-35">
+                  {r.dias.join(", ")} · {r.horaInicio}-{r.horaFin} · {r.lugar}
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => removeRitual(r.id)}
+                className="mt-0.5 text-xs text-red-400/50 hover:text-red-400"
+              >
+                ✕
+              </button>
             </div>
           ))}
         </>
@@ -95,15 +149,17 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
 
       <hr className="my-4 border-white/5" />
 
+      {/* Add ritual form — controlled inputs */}
       <label className="mb-2 block font-mono text-xs uppercase opacity-40">
         Agregar ritual
       </label>
-      <form action={ritualAction} className="rounded-lg border border-white/10 bg-white/5 p-3">
+      <div className="rounded-lg border border-white/10 bg-white/5 p-3">
         <label className="mb-1 block font-mono text-[10px] uppercase opacity-40">
           Hábito
         </label>
         <input
-          name="descripcion"
+          value={descripcion}
+          onChange={(e) => setDescripcion(e.target.value)}
           placeholder="Caminar 30 minutos"
           className="mb-3 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
         />
@@ -134,7 +190,8 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               Hora inicio
             </label>
             <input
-              name="horaInicio"
+              value={horaInicio}
+              onChange={(e) => setHoraInicio(e.target.value)}
               type="time"
               className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
             />
@@ -144,7 +201,8 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               Hora fin
             </label>
             <input
-              name="horaFin"
+              value={horaFin}
+              onChange={(e) => setHoraFin(e.target.value)}
               type="time"
               className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
             />
@@ -155,26 +213,29 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           Lugar
         </label>
         <input
-          name="lugar"
+          value={lugar}
+          onChange={(e) => setLugar(e.target.value)}
           placeholder="Barrio"
           className="mb-3 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
         />
 
-        <button
-          type="submit"
-          disabled={ritualPending}
-          className="w-full rounded-lg border border-white/10 py-2 text-sm opacity-60"
-        >
-          + Agregar ritual
-        </button>
-      </form>
+        {error && (
+          <p className="mb-2 text-xs text-red-400">{error}</p>
+        )}
 
-      {ritualState?.error && (
-        <p className="mt-2 text-sm text-red-400">{ritualState.error}</p>
-      )}
+        <button
+          type="button"
+          onClick={handleAddRitual}
+          disabled={saving}
+          className="w-full rounded-lg border border-white/10 py-2 text-sm opacity-60 hover:opacity-80 disabled:opacity-30"
+        >
+          {saving ? "Guardando..." : "+ Agregar ritual"}
+        </button>
+      </div>
 
       <button
-        onClick={handleSaveMission}
+        type="button"
+        onClick={handleNext}
         disabled={!category || rituals.length === 0}
         className="mt-4 w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
       >

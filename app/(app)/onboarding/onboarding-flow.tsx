@@ -13,7 +13,14 @@ type Props = {
     identidadTexto: string | null;
     misionCategoria: string | null;
   };
-  rituals: { id: string; descripcion: string }[];
+  rituals: {
+    id: string;
+    descripcion: string;
+    dias: string[];
+    horaInicio: string;
+    horaFin: string;
+    lugar: string;
+  }[];
 };
 
 export function OnboardingFlow({ userId, currentCharacter, rituals }: Props) {
