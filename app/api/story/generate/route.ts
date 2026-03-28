@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { resolveUserId } from "@/lib/dal";
 import { generateText, createGateway } from "ai";
 import { buildSystemPrompt } from "@/lib/prompts";
 import { buildNarrativeContext } from "@/lib/prompts/build-context";
@@ -14,7 +15,8 @@ const gateway = createGateway({
 
 export async function POST(request: Request) {
   const session = await auth();
-  if (!session?.user?.id) {
+  const userId = await resolveUserId(session);
+  if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -26,7 +28,7 @@ export async function POST(request: Request) {
 
   // Build context
   const context = await buildNarrativeContext(
-    session.user.id,
+    userId,
     trigger,
     textoJugador ?? null
   );
@@ -87,7 +89,7 @@ ${context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n
 
   // Save story entry
   await db.insert(storyEntries).values({
-    userId: session.user.id,
+    userId,
     fecha: today,
     turnoNumero: nextTurno,
     textoJugador: textoJugador ?? null,
