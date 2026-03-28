@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { signOutAction } from "./actions";
+import { signOutAction } from "@/features/shared/auth/actions";
 
 const ARCHETYPE_ICONS: Record<string, string> = {
   paladin: "⚔️",
