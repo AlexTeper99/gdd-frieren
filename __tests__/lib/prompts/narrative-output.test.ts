@@ -7,9 +7,10 @@ import { generateText, createGateway } from 'ai'
 import { buildSystemPrompt } from '@/lib/prompts'
 import type { TriggerType } from '@/lib/prompts'
 import {
-  ALL_STAT_PROFILES,
-  DECISIONS,
-  makeGameContext,
+  PLAYER_HIGH_HP,
+  PLAYER_LOW_HP,
+  PLAYER_2,
+  makeNarrativeContext,
 } from './fixtures'
 
 // Load .env.local manually since vitest doesn't auto-load it in node env
@@ -36,27 +37,28 @@ const gateway = createGateway({
 
 async function generateNarrative(
   trigger: TriggerType,
-  p1StatsKey: keyof typeof ALL_STAT_PROFILES,
-  decisionKey: keyof typeof DECISIONS,
-  extraOverrides?: { decision_p2?: string; p2Stats?: (typeof ALL_STAT_PROFILES)[keyof typeof ALL_STAT_PROFILES] },
+  jugadorActivo: typeof PLAYER_HIGH_HP,
+  textoJugador: string | null = null,
 ): Promise<string> {
   const systemPrompt = buildSystemPrompt(trigger)
-  const context = makeGameContext({
+  const context = makeNarrativeContext({
     trigger,
-    p1Stats: ALL_STAT_PROFILES[p1StatsKey],
-    decision: DECISIONS[decisionKey],
-    ...extraOverrides,
+    jugadorActivo,
+    textoJugador,
   })
 
+  const userMessage = `JUGADOR ACTIVO:\n${JSON.stringify(context.jugadorActivo)}\n\n${
+    context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n\n` : ''
+  }${
+    context.textoJugador
+      ? `TEXTO DEL JUGADOR:\n${context.textoJugador}`
+      : 'Generá el prólogo del personaje.'
+  }`
+
   const { text } = await generateText({
-    model: gateway('anthropic/claude-sonnet-4-5'),
+    model: gateway('anthropic/claude-sonnet-4.5'),
     system: systemPrompt,
-    messages: [
-      {
-        role: 'user',
-        content: JSON.stringify(context),
-      },
-    ],
+    prompt: userMessage,
     maxOutputTokens: 1024,
   })
 
@@ -64,15 +66,10 @@ async function generateNarrative(
 }
 
 const FORBIDDEN_PATTERNS = [
-  // Game mechanic terms (exact technical usage, not common Spanish words)
-  /\b(VIT|STA|STR|stat|stats|porcentaje|streak|level)\b/,
-  // "racha" and "nivel" and "poder" are common Spanish words — only flag them
-  // when used in a game-mechanic context like "racha de 5 días" or "nivel 3"
+  // Game mechanic terms
+  /\b(HP|stat|stats|porcentaje|streak|level)\b/,
   /racha de \d/i,
   /nivel \d/i,
-  /poder[:=] ?\d/i,
-  // INT as a stat (case-sensitive to avoid matching Spanish words like "inteligencia")
-  /\bINT\b/,
   // Moral judgment
   /\b(fallaste|fallaron|débil|decepcionante|decepcionó|vergüenza)\b/i,
   // Fourth wall
@@ -97,108 +94,63 @@ function assertIsSpanish(text: string) {
   expect(text).toMatch(spanishMarkers)
 }
 
-describe('Narrative output — daily trigger', { timeout: 30_000 }, () => {
-  it('high stats + risky decision → epic without unearned difficulty', async () => {
-    const text = await generateNarrative('daily', 'all_high', 'risky')
+describe('Narrative output — prologo trigger', { timeout: 30_000 }, () => {
+  it('high HP → introduces character in Valdris', async () => {
+    const text = await generateNarrative('prologo', PLAYER_HIGH_HP)
 
     assertNoForbiddenPatterns(text)
     assertHasSensoryDetail(text)
     assertIsSpanish(text)
 
-    expect(text).not.toMatch(/\b(no pudo|no alcanzó|no llegó|falló|fallaron)\b/i)
+    expect(text).toMatch(/Kael/i)
+  })
+})
+
+describe('Narrative output — diario trigger', { timeout: 30_000 }, () => {
+  it('high HP + player text → continues story naturally', async () => {
+    const text = await generateNarrative(
+      'diario',
+      PLAYER_HIGH_HP,
+      'Kael se acercó al río antes de que Lyra despertara. El agua estaba helada pero clara.'
+    )
+
+    assertNoForbiddenPatterns(text)
+    assertHasSensoryDetail(text)
+    assertIsSpanish(text)
+
+    expect(text).toMatch(/Kael/i)
   })
 
-  it('low stats + risky decision → consequence with world deterioration', async () => {
-    const text = await generateNarrative('daily', 'low', 'risky')
+  it('low HP + player text → world reflects difficulty', async () => {
+    const text = await generateNarrative(
+      'diario',
+      PLAYER_LOW_HP,
+      'Kael intentó levantarse temprano pero le costó. Igual salió a buscar leña.'
+    )
 
     assertNoForbiddenPatterns(text)
     assertIsSpanish(text)
 
-    // Ensure it's not a clean, effortless victory (negations like "no... fácil" are fine)
     expect(text).not.toMatch(/\b(salió limpio|fue fácil|sin esfuerzo|sin problema|sin dificultad)\b/i)
-  })
-
-  it('regular stats + safe decision → success but harder', async () => {
-    const text = await generateNarrative('daily', 'regular', 'safe')
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
-  })
-
-  it('critical stats → world resists, no epic', async () => {
-    const text = await generateNarrative('daily', 'critical', 'risky')
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
-  })
-})
-
-describe('Narrative output — boss_semanal trigger', { timeout: 30_000 }, () => {
-  it('compatible decisions → fused narrative', async () => {
-    const text = await generateNarrative('boss_semanal', 'all_high', 'risky', {
-      decision_p2: 'Lyra flanquea por la izquierda. Busca un punto ciego.',
-      p2Stats: ALL_STAT_PROFILES.all_high,
-    })
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
-
-    expect(text).toMatch(/Kael/i)
-    expect(text).toMatch(/Lyra/i)
-  })
-})
-
-describe('Narrative output — vinculo trigger', { timeout: 30_000 }, () => {
-  it('produces intimate scene without action', async () => {
-    const text = await generateNarrative('vinculo', 'all_high', 'neutral')
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
-
-    // Check for active combat/action verbs — negations like "no hay criatura" are fine
-    expect(text).not.toMatch(/\b(atacó|luchó|desenvainó|combatieron|embistió)\b/i)
-
-    expect(text).toMatch(/Kael/i)
-    expect(text).toMatch(/Lyra/i)
-  })
-})
-
-describe('Narrative output — recovery trigger', { timeout: 30_000 }, () => {
-  it('mentions concrete loss but dignified return', async () => {
-    const text = await generateNarrative('recovery', 'critical', 'neutral')
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
-
-    expect(text).not.toMatch(/\b(abandonó|rindió|cobarde|débil)\b/i)
-  })
-})
-
-describe('Narrative output — arc_close trigger', { timeout: 30_000 }, () => {
-  it('good month → sense of earned growth', async () => {
-    const text = await generateNarrative('arc_close', 'all_high', 'neutral')
-
-    assertNoForbiddenPatterns(text)
-    assertIsSpanish(text)
   })
 })
 
 describe('Narrative output — cross-trigger invariants', { timeout: 60_000 }, () => {
-  const triggers: TriggerType[] = ['daily', 'weekly_close', 'arc_open']
+  const triggers: TriggerType[] = ['prologo', 'diario']
 
   for (const trigger of triggers) {
     it(`${trigger}: never mentions stats or game mechanics`, async () => {
-      const text = await generateNarrative(trigger, 'mixed', 'safe')
+      const text = await generateNarrative(trigger, PLAYER_HIGH_HP)
       assertNoForbiddenPatterns(text)
     })
 
     it(`${trigger}: always in Spanish`, async () => {
-      const text = await generateNarrative(trigger, 'mixed', 'safe')
+      const text = await generateNarrative(trigger, PLAYER_HIGH_HP)
       assertIsSpanish(text)
     })
 
     it(`${trigger}: always has sensory detail`, async () => {
-      const text = await generateNarrative(trigger, 'mixed', 'safe')
+      const text = await generateNarrative(trigger, PLAYER_HIGH_HP)
       assertHasSensoryDetail(text)
     })
   }
