@@ -105,8 +105,8 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
             onClick={() => setCategory(c)}
             className={`rounded-full border px-3 py-1.5 text-xs transition ${
               category === c
-                ? "border-purple-500/40 bg-purple-500/10 text-purple-300"
-                : "border-white/10 bg-white/5"
+                ? "border-hq-purple-border bg-hq-purple-bg text-hq-purple"
+                : "border-hq-border bg-hq-bg-card"
             }`}
           >
             {c}
@@ -123,7 +123,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           {rituals.map((r) => (
             <div
               key={r.id}
-              className="mb-2 flex items-start gap-2 rounded-lg border border-green-500/20 bg-green-500/5 px-3 py-2"
+              className="mb-2 flex items-start gap-2 rounded-lg border border-hq-green-border bg-hq-green-bg px-3 py-2"
             >
               <div className="flex-1">
                 <div className="text-sm font-medium">{r.descripcion}</div>
@@ -134,7 +134,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               <button
                 type="button"
                 onClick={() => removeRitual(r.id)}
-                className="mt-0.5 text-xs text-red-400/50 hover:text-red-400"
+                className="mt-0.5 text-xs text-hq-red/50 hover:text-hq-red"
               >
                 ✕
               </button>
@@ -143,13 +143,13 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
         </>
       )}
 
-      <hr className="my-4 border-white/5" />
+      <hr className="my-4 border-hq-border" />
 
       {/* Add ritual form — 100% local, no server calls */}
       <label className="mb-2 block font-mono text-xs uppercase opacity-40">
         Nuevo ritual
       </label>
-      <div className="rounded-lg border border-white/10 bg-white/5 p-3">
+      <div className="rounded-lg border border-hq-border bg-hq-bg-card p-3">
         <label className="mb-1 block font-mono text-[10px] uppercase opacity-40">
           Hábito
         </label>
@@ -157,7 +157,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           value={descripcion}
           onChange={(e) => setDescripcion(e.target.value)}
           placeholder="Caminar 30 minutos"
-          className="mb-3 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+          className="mb-3 w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2 text-sm"
         />
 
         <label className="mb-1 block font-mono text-[10px] uppercase opacity-40">
@@ -171,8 +171,8 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               onClick={() => toggleDay(d)}
               className={`rounded-md border px-2 py-1 text-[10px] capitalize transition ${
                 selectedDays.includes(d)
-                  ? "border-purple-500/30 bg-purple-500/10 text-purple-300"
-                  : "border-white/10 opacity-30"
+                  ? "border-hq-purple-border bg-hq-purple-bg text-hq-purple"
+                  : "border-hq-border opacity-30"
               }`}
             >
               {d}
@@ -189,7 +189,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               value={horaInicio}
               onChange={(e) => setHoraInicio(e.target.value)}
               type="time"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2 text-sm"
             />
           </div>
           <div className="flex-1">
@@ -200,7 +200,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
               value={horaFin}
               onChange={(e) => setHoraFin(e.target.value)}
               type="time"
-              className="w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+              className="w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2 text-sm"
             />
           </div>
         </div>
@@ -212,17 +212,17 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           value={lugar}
           onChange={(e) => setLugar(e.target.value)}
           placeholder="Barrio"
-          className="mb-3 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm"
+          className="mb-3 w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2 text-sm"
         />
 
         {error && (
-          <p className="mb-2 text-xs text-red-400">{error}</p>
+          <p className="mb-2 text-xs text-hq-red">{error}</p>
         )}
 
         <button
           type="button"
           onClick={handleAddRitual}
-          className="w-full rounded-lg border border-white/10 py-2 text-sm opacity-60 hover:opacity-80"
+          className="w-full rounded-lg border border-hq-border py-2 text-sm opacity-60 hover:opacity-80"
         >
           + Agregar a la lista
         </button>
@@ -232,7 +232,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
         type="button"
         onClick={handleNext}
         disabled={!category || rituals.length === 0 || submitting}
-        className="mt-4 w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
+        className="mt-4 w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple disabled:opacity-30"
       >
         {submitting ? "Guardando..." : "Siguiente"}
       </button>

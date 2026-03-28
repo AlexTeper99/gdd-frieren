@@ -54,7 +54,7 @@ export function ProfileView({
     <div className="flex flex-col gap-4">
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-purple-500/25 bg-purple-500/10 text-xl">
+        <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-hq-purple-border bg-hq-purple-bg text-xl">
           {ARCHETYPE_ICONS[user.arquetipo ?? "mago"]}
         </div>
         <div>
@@ -72,9 +72,9 @@ export function ProfileView({
         <div className="mb-1 font-mono text-[10px] uppercase opacity-40">
           Puntos de Vida
         </div>
-        <div className="h-3 overflow-hidden rounded-lg bg-white/5">
+        <div className="h-3 overflow-hidden rounded-lg bg-hq-bg-card">
           <div
-            className="h-full rounded-lg bg-green-500"
+            className="h-full rounded-lg bg-hq-green"
             style={{ width: `${user.hp}%` }}
           />
         </div>
@@ -95,7 +95,7 @@ export function ProfileView({
           .map((r) => (
             <div
               key={r.id}
-              className="mb-1 flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+              className="mb-1 flex items-center gap-2 rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2"
             >
               <span className="text-[10px] opacity-40">🔥</span>
               <div className="flex-1">
@@ -104,14 +104,14 @@ export function ProfileView({
                   {r.horaInicio}-{r.horaFin}
                 </div>
               </div>
-              <span className="text-xs font-semibold text-orange-400">
+              <span className="text-xs font-semibold text-hq-amber">
                 {r.racha}d
               </span>
             </div>
           ))}
       </div>
 
-      <hr className="border-white/5" />
+      <hr className="border-hq-border" />
 
       {/* Heatmap */}
       <div>
@@ -153,10 +153,10 @@ export function ProfileView({
 
       {isMe && (
         <>
-          <hr className="border-white/5" />
+          <hr className="border-hq-border" />
           <Link
             href="/profile/rituals"
-            className="w-full rounded-xl border border-white/10 py-2.5 text-center text-sm opacity-40"
+            className="w-full rounded-xl border border-hq-border py-2.5 text-center text-sm opacity-40"
           >
             Editar rituales
           </Link>

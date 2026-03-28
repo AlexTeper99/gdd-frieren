@@ -45,26 +45,26 @@ export function HomeScreen({
 
       {/* Both characters */}
       <div className="flex gap-2">
-        <div className="flex flex-1 items-center gap-2 rounded-xl border border-purple-500/15 bg-purple-500/5 p-3">
+        <div className="flex flex-1 items-center gap-2 rounded-xl border border-hq-purple-border bg-hq-purple-bg p-3">
           <span className="text-lg">{ARCHETYPE_ICONS[me.arquetipo]}</span>
           <div className="flex-1">
             <div className="text-sm font-semibold">{me.nombre}</div>
             <div className="text-[10px] capitalize opacity-35">{me.arquetipo}</div>
           </div>
           <div className="text-right">
-            <div className="text-lg font-bold text-green-500">{me.hp}</div>
+            <div className="text-lg font-bold text-hq-green">{me.hp}</div>
             <div className="text-[9px] opacity-30">HP</div>
           </div>
         </div>
         {other && (
-          <div className="flex flex-1 items-center gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
+          <div className="flex flex-1 items-center gap-2 rounded-xl border border-hq-border bg-hq-bg-card p-3">
             <span className="text-lg">{ARCHETYPE_ICONS[other.arquetipo]}</span>
             <div className="flex-1">
               <div className="text-sm font-semibold">{other.nombre}</div>
               <div className="text-[10px] capitalize opacity-35">{other.arquetipo}</div>
             </div>
             <div className="text-right">
-              <div className="text-lg font-bold text-amber-400">{other.hp}</div>
+              <div className="text-lg font-bold text-hq-amber">{other.hp}</div>
               <div className="text-[9px] opacity-30">HP</div>
             </div>
           </div>
@@ -72,7 +72,7 @@ export function HomeScreen({
       </div>
 
       {/* Navigation buttons */}
-      <Link href="/rituals" className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
+      <Link href="/rituals" className="flex items-center gap-3 rounded-xl border border-hq-border bg-hq-bg-card p-4 transition hover:bg-hq-bg-card-hover">
         <span className="text-2xl">🔥</span>
         <div>
           <div className="font-semibold">Rituales</div>
@@ -80,7 +80,7 @@ export function HomeScreen({
         </div>
       </Link>
 
-      <Link href="/story" className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
+      <Link href="/story" className="flex items-center gap-3 rounded-xl border border-hq-border bg-hq-bg-card p-4 transition hover:bg-hq-bg-card-hover">
         <span className="text-2xl">📖</span>
         <div>
           <div className="font-semibold">Historia</div>
@@ -90,10 +90,10 @@ export function HomeScreen({
 
       <Link
         href="/pact"
-        className={`flex items-center gap-3 rounded-xl border p-4 transition hover:bg-white/10 ${
+        className={`flex items-center gap-3 rounded-xl border p-4 transition hover:bg-hq-bg-card-hover ${
           isSunday
-            ? "border-amber-500/30 bg-amber-500/5"
-            : "border-white/10 bg-white/5"
+            ? "border-hq-amber-border bg-hq-amber-bg"
+            : "border-hq-border bg-hq-bg-card"
         }`}
       >
         <span className="text-2xl">📜</span>
@@ -102,13 +102,13 @@ export function HomeScreen({
           <div className="text-xs opacity-35">Compromiso semanal</div>
         </div>
         {isSunday && (
-          <span className="rounded-lg bg-amber-500/15 px-2 py-0.5 text-[10px] font-semibold text-amber-400">
+          <span className="rounded-lg bg-hq-amber-bg px-2 py-0.5 text-[10px] font-semibold text-hq-amber">
             DOM
           </span>
         )}
       </Link>
 
-      <Link href="/profile" className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
+      <Link href="/profile" className="flex items-center gap-3 rounded-xl border border-hq-border bg-hq-bg-card p-4 transition hover:bg-hq-bg-card-hover">
         <span className="text-2xl">{ARCHETYPE_ICONS[me.arquetipo]}</span>
         <div>
           <div className="font-semibold">{me.nombre}</div>
@@ -117,7 +117,7 @@ export function HomeScreen({
       </Link>
 
       {other && (
-        <Link href={`/profile/${other.id}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/5 p-4 transition hover:bg-white/10">
+        <Link href={`/profile/${other.id}`} className="flex items-center gap-3 rounded-xl border border-hq-border bg-hq-bg-card p-4 transition hover:bg-hq-bg-card-hover">
           <span className="text-2xl">{ARCHETYPE_ICONS[other.arquetipo]}</span>
           <div>
             <div className="font-semibold">{other.nombre}</div>
@@ -129,7 +129,7 @@ export function HomeScreen({
       <form action={signOutAction} className="mt-4">
         <button
           type="submit"
-          className="w-full rounded-xl border border-white/10 py-2 text-xs opacity-25 hover:opacity-50"
+          className="w-full rounded-xl border border-hq-border py-2 text-xs opacity-25 hover:opacity-50"
         >
           Cerrar sesión
         </button>

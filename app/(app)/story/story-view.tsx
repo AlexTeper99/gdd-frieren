@@ -66,11 +66,11 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
       )}
 
       {isMyTurn ? (
-        <span className="inline-block w-fit rounded-full border border-green-500/25 bg-green-500/10 px-3 py-1 text-xs font-semibold text-green-400">
+        <span className="inline-block w-fit rounded-full border border-hq-green-border bg-hq-green-bg px-3 py-1 text-xs font-semibold text-hq-green">
           Tu turno de escribir
         </span>
       ) : (
-        <span className="inline-block w-fit rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/35">
+        <span className="inline-block w-fit rounded-full border border-hq-border bg-hq-bg-card px-3 py-1 text-xs text-white/35">
           Turno del otro jugador
         </span>
       )}
@@ -82,14 +82,14 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
             Turno {lastEntry.turnoNumero} · {lastEntry.autorNombre}
           </p>
           {lastEntry.textoJugador && (
-            <div className="rounded-r-lg border-l-2 border-blue-500/20 bg-blue-500/5 p-3 text-sm leading-relaxed opacity-70">
+            <div className="rounded-r-lg border-l-2 border-hq-blue-border bg-hq-blue-bg p-3 text-sm leading-relaxed opacity-70">
               {lastEntry.textoJugador}
             </div>
           )}
           {lastEntry.textoIa && lastEntry.textoIa.split("\n\n").map((p, i) => (
             <div
               key={i}
-              className="rounded-r-lg border-l-2 border-purple-500/15 bg-purple-500/5 p-3 font-serif text-sm italic leading-relaxed opacity-75"
+              className="rounded-r-lg border-l-2 border-hq-purple-border bg-hq-purple-bg p-3 font-serif text-sm italic leading-relaxed opacity-75"
             >
               {p}
             </div>
@@ -100,7 +100,7 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
       {/* Write area */}
       {isMyTurn && !result && (
         <>
-          <hr className="border-white/5" />
+          <hr className="border-hq-border" />
           <label className="font-mono text-[10px] uppercase opacity-40">
             Tu parte de la historia
           </label>
@@ -109,17 +109,17 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
             onChange={(e) => setText(e.target.value)}
             rows={5}
             placeholder="Kael se acercó al río antes de que Lyra despertara..."
-            className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-sm"
+            className="w-full rounded-lg border border-hq-border bg-hq-bg-card p-3 text-sm"
           />
           <button
             onClick={handleSubmit}
             disabled={generating || !text.trim()}
-            className="w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
+            className="w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple disabled:opacity-30"
           >
             {generating ? "Escribiendo..." : "Enviar"}
           </button>
       {error && (
-        <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-sm text-red-400">
+        <div className="rounded-lg border border-hq-red-border bg-hq-red-bg p-3 text-sm text-hq-red">
           {error}
           <button
             onClick={() => { setError(null); }}
@@ -135,14 +135,14 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
       {/* Generated result */}
       {result && (
         <>
-          <hr className="border-white/5" />
+          <hr className="border-hq-border" />
           <p className="font-mono text-[10px] uppercase opacity-20">
             Continuación
           </p>
           {result.split("\n\n").map((p, i) => (
             <div
               key={i}
-              className="rounded-r-lg border-l-2 border-purple-500/15 bg-purple-500/5 p-3 font-serif text-sm italic leading-relaxed opacity-75"
+              className="rounded-r-lg border-l-2 border-hq-purple-border bg-hq-purple-bg p-3 font-serif text-sm italic leading-relaxed opacity-75"
             >
               {p}
             </div>
@@ -153,7 +153,7 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
       {/* History */}
       {entries.length > 1 && (
         <>
-          <hr className="my-2 border-white/5" />
+          <hr className="my-2 border-hq-border" />
           <p className="text-center text-xs opacity-20">
             Entradas anteriores
           </p>
@@ -163,11 +163,11 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
                 Turno {e.turnoNumero} · {e.autorNombre}
               </p>
               {e.textoJugador && (
-                <div className="rounded-r-lg border-l-2 border-blue-500/10 bg-blue-500/5 p-3 text-xs leading-relaxed opacity-60">
+                <div className="rounded-r-lg border-l-2 border-hq-blue-border bg-hq-blue-bg p-3 text-xs leading-relaxed opacity-60">
                   {e.textoJugador.slice(0, 100)}...
                 </div>
               )}
-              <div className="rounded-r-lg border-l-2 border-purple-500/10 bg-purple-500/5 p-3 font-serif text-xs italic leading-relaxed">
+              <div className="rounded-r-lg border-l-2 border-hq-purple-border bg-hq-purple-bg p-3 font-serif text-xs italic leading-relaxed">
                 {(e.textoIa ?? "").slice(0, 200)}...
               </div>
             </div>

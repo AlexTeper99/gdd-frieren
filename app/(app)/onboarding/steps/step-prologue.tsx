@@ -55,7 +55,7 @@ export function StepPrologue({ userId }: Props) {
       {!prologueText && !loading && (
         <button
           onClick={generatePrologue}
-          className="w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300"
+          className="w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple"
         >
           Generar prólogo
         </button>
@@ -68,7 +68,7 @@ export function StepPrologue({ userId }: Props) {
       )}
 
       {error && (
-        <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-sm text-red-400">
+        <div className="mb-4 rounded-lg border border-hq-red-border bg-hq-red-bg p-3 text-sm text-hq-red">
           {error}
           <button
             onClick={generatePrologue}
@@ -84,7 +84,7 @@ export function StepPrologue({ userId }: Props) {
           {prologueText.split("\n\n").map((paragraph, i) => (
             <div
               key={i}
-              className="mb-3 rounded-r-lg border-l-2 border-purple-500/15 bg-purple-500/5 p-3 font-serif text-sm italic leading-relaxed opacity-75"
+              className="mb-3 rounded-r-lg border-l-2 border-hq-purple-border bg-hq-purple-bg p-3 font-serif text-sm italic leading-relaxed opacity-75"
             >
               {paragraph}
             </div>
@@ -93,7 +93,7 @@ export function StepPrologue({ userId }: Props) {
           <button
             onClick={handleEnter}
             disabled={completing}
-            className="mt-4 w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
+            className="mt-4 w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple disabled:opacity-30"
           >
             {completing ? "Entrando..." : "Entrar a Valdris"}
           </button>

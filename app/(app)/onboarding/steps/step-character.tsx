@@ -54,8 +54,8 @@ export function StepCharacter({ current, onComplete }: Props) {
             onClick={() => setSelectedArchetype(a.value)}
             className={`rounded-xl border p-3 text-center transition ${
               selectedArchetype === a.value
-                ? "border-purple-500/40 bg-purple-500/10"
-                : "border-white/10 bg-white/5"
+                ? "border-hq-purple-border bg-hq-purple-bg"
+                : "border-hq-border bg-hq-bg-card"
             }`}
           >
             <div className="text-2xl">{a.icon}</div>
@@ -72,7 +72,7 @@ export function StepCharacter({ current, onComplete }: Props) {
         name="nombrePersonaje"
         defaultValue={current.nombrePersonaje ?? ""}
         placeholder="Kael"
-        className="mb-4 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm"
+        className="mb-4 w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2.5 text-sm"
       />
 
       <label className="mb-2 block font-mono text-xs uppercase opacity-40">
@@ -83,17 +83,17 @@ export function StepCharacter({ current, onComplete }: Props) {
         defaultValue={current.identidadTexto ?? ""}
         placeholder="Alguien que cuida lo que come y cómo se mueve"
         rows={3}
-        className="mb-6 w-full rounded-lg border border-white/10 bg-white/5 px-3 py-2.5 text-sm"
+        className="mb-6 w-full rounded-lg border border-hq-border bg-hq-bg-card px-3 py-2.5 text-sm"
       />
 
       {state?.error && (
-        <p className="mb-4 text-sm text-red-400">{state.error}</p>
+        <p className="mb-4 text-sm text-hq-red">{state.error}</p>
       )}
 
       <button
         type="submit"
         disabled={pending || !selectedArchetype}
-        className="w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
+        className="w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple disabled:opacity-30"
       >
         {pending ? "Guardando..." : "Siguiente"}
       </button>

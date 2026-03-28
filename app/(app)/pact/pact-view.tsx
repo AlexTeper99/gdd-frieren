@@ -37,15 +37,15 @@ export function PactView({
   if (isSealed) {
     return (
       <div className="flex flex-col gap-4">
-        <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-5 text-center">
+        <div className="rounded-xl border border-hq-amber-border bg-hq-amber-bg p-5 text-center">
           <div className="text-4xl">🏰</div>
-          <div className="mt-2 font-semibold text-amber-400">Pacto Sellado</div>
+          <div className="mt-2 font-semibold text-hq-amber">Pacto Sellado</div>
           <div className="mt-1 text-xs opacity-35">
             {myName} ✓ · {otherName} ✓
           </div>
         </div>
 
-        <div className="rounded-lg bg-white/5 p-3">
+        <div className="rounded-lg bg-hq-bg-card p-3">
           <div className="mb-1 text-xs opacity-35">{myName}</div>
           <div className="text-xs opacity-50 leading-relaxed">
             {Object.values(myAnswers ?? {}).join(". ")}
@@ -53,7 +53,7 @@ export function PactView({
         </div>
 
         {otherAnswers && (
-          <div className="rounded-lg bg-white/5 p-3">
+          <div className="rounded-lg bg-hq-bg-card p-3">
             <div className="mb-1 text-xs opacity-35">{otherName}</div>
             <div className="text-xs opacity-50 leading-relaxed">
               {Object.values(otherAnswers).join(". ")}
@@ -89,7 +89,7 @@ export function PactView({
           <textarea
             name={q.key}
             rows={2}
-            className="w-full rounded-lg border border-white/10 bg-white/5 p-3 text-sm"
+            className="w-full rounded-lg border border-hq-border bg-hq-bg-card p-3 text-sm"
           />
         </div>
       ))}
@@ -97,7 +97,7 @@ export function PactView({
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
+        className="w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-3 font-semibold text-hq-purple disabled:opacity-30"
       >
         {pending ? "Firmando..." : "Firmar Pacto"}
       </button>
