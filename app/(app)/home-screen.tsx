@@ -124,6 +124,15 @@ export function HomeScreen({
           </div>
         </Link>
       )}
+
+      <form action="/api/auth/signout" method="POST" className="mt-4">
+        <button
+          type="submit"
+          className="w-full rounded-xl border border-white/10 py-2 text-xs opacity-25 hover:opacity-50"
+        >
+          Cerrar sesión
+        </button>
+      </form>
     </div>
   );
 }
