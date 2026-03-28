@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import { db } from "@/lib/db";
-import * as schema from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import * as schema from "@/features/shared/db/schema";
 
 const VALID_USERS = [
   { email: "alexteper99@gmail.com", name: "Alex" },

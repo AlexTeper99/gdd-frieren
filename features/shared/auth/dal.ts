@@ -2,9 +2,9 @@ import "server-only";
 
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { auth } from "@/features/shared/auth";
+import { db } from "@/features/shared/db";
+import { users } from "@/features/shared/db/schema";
 import { eq } from "drizzle-orm";
 
 /** Resolve DB user UUID from session. Use in API routes where verifySession() isn't available. */

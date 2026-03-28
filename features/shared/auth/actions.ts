@@ -1,6 +1,6 @@
 "use server";
 
-import { signOut } from "@/lib/auth";
+import { signOut } from "@/features/shared/auth";
 
 export async function signOutAction() {
   await signOut({ redirectTo: "/login" });
