@@ -1,8 +1,8 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { rituals, ritualLogs, users } from "@/lib/db/schema";
-import { verifySession } from "@/lib/dal";
+import { db } from "@/features/shared/db";
+import { rituals, ritualLogs, users } from "@/features/shared/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
 import { eq, and, sql } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import {
@@ -12,7 +12,7 @@ import {
   HP_MAX,
   getLocalDate,
   getLocalDay,
-} from "@/lib/shared/constants";
+} from "@/features/shared/constants";
 
 export async function markRitualComplete(ritualId: string) {
   const { user } = await verifySession();

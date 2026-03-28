@@ -1,14 +1,14 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { users, rituals, ritualLogs } from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import { users, rituals, ritualLogs } from "@/features/shared/db/schema";
 import { eq, and } from "drizzle-orm";
 import {
   HP_PENALTY,
   HP_RESET_ON_ZERO,
   getLocalDate,
   getLocalDay,
-} from "@/lib/shared/constants";
+} from "@/features/shared/constants";
 
 export async function penalizeUncompletedRituals() {
   const today = getLocalDate();

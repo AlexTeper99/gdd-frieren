@@ -1,5 +1,5 @@
-import { db } from "@/lib/db";
-import { storyMemory } from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import { storyMemory } from "@/features/shared/db/schema";
 import { desc } from "drizzle-orm";
 import { generateText, createGateway } from "ai";
 

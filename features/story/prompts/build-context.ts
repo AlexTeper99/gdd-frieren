@@ -1,10 +1,10 @@
-import { db } from "@/lib/db";
+import { db } from "@/features/shared/db";
 import {
   users,
   rituals,
   storyEntries,
   storyMemory,
-} from "@/lib/db/schema";
+} from "@/features/shared/db/schema";
 import { eq, desc, and } from "drizzle-orm";
 import type { NarrativeContext, PlayerContext } from "./types";
 

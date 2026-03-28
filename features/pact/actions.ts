@@ -1,11 +1,11 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { pacts, users } from "@/lib/db/schema";
-import { verifySession } from "@/lib/dal";
+import { db } from "@/features/shared/db";
+import { pacts, users } from "@/features/shared/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
 import { eq, asc } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { USER_TIMEZONE } from "@/lib/shared/constants";
+import { USER_TIMEZONE } from "@/features/shared/constants";
 
 function getCurrentSunday(): string {
   const now = new Date();

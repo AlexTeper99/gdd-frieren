@@ -1,6 +1,6 @@
 import { webPush } from "./vapid";
-import { db } from "@/lib/db";
-import { pushSubscriptions } from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import { pushSubscriptions } from "@/features/shared/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function sendPushToUser(

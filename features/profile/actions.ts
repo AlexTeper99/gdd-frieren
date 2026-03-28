@@ -1,8 +1,8 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { users, rituals, ritualLogs } from "@/lib/db/schema";
-import { verifySession } from "@/lib/dal";
+import { db } from "@/features/shared/db";
+import { users, rituals, ritualLogs } from "@/features/shared/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
 import { eq, and, gte } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 

@@ -1,7 +1,7 @@
 "use server";
 
-import { db } from "@/lib/db";
-import { storyEntries, users } from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import { storyEntries, users } from "@/features/shared/db/schema";
 import { desc, eq, asc } from "drizzle-orm";
 
 export async function getStoryState(userId: string) {
