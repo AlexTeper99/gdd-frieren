@@ -46,17 +46,27 @@ export function PactView({
         </div>
 
         <div className="rounded-lg bg-hq-bg-card p-3">
-          <div className="mb-1 text-xs opacity-35">{myName}</div>
-          <div className="text-xs opacity-50 leading-relaxed">
-            {Object.values(myAnswers ?? {}).join(". ")}
+          <div className="mb-2 text-xs font-semibold text-hq-text-muted">{myName}</div>
+          <div className="space-y-2">
+            {QUESTIONS.map((q) => (
+              <div key={q.key}>
+                <div className="text-[10px] text-hq-text-faint">{q.label}</div>
+                <div className="text-xs text-hq-text-muted">{(myAnswers as Record<string, string>)?.[q.key] ?? ""}</div>
+              </div>
+            ))}
           </div>
         </div>
 
         {otherAnswers && (
           <div className="rounded-lg bg-hq-bg-card p-3">
-            <div className="mb-1 text-xs opacity-35">{otherName}</div>
-            <div className="text-xs opacity-50 leading-relaxed">
-              {Object.values(otherAnswers).join(". ")}
+            <div className="mb-2 text-xs font-semibold text-hq-text-muted">{otherName}</div>
+            <div className="space-y-2">
+              {QUESTIONS.map((q) => (
+                <div key={q.key}>
+                  <div className="text-[10px] text-hq-text-faint">{q.label}</div>
+                  <div className="text-xs text-hq-text-muted">{(otherAnswers as Record<string, string>)?.[q.key] ?? ""}</div>
+                </div>
+              ))}
             </div>
           </div>
         )}
