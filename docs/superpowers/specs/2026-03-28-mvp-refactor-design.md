@@ -568,20 +568,7 @@ CRON_SECRET=
 
 ## 10. Additions from Spec Review (post-audit)
 
-### 10.1 HP Feedback Clarity
-
-El prompt actual deja la interpretación de HP "libre" — la IA podría no diferenciar HP 80 vs HP 30.
-
-Agregar al system prompt (`features/story/prompts/base.ts`), dentro de `<calibracion>`:
-
-```
-Si HP < 50, hacé que el mundo sea NOTORIAMENTE más difícil:
-aliados menos disponibles, caminos más largos, una pérdida
-concreta por día hasta que HP se recupere. La diferencia
-entre HP alto y HP bajo debe ser obvia para el lector.
-```
-
-### 10.2 Turn Auto-Pass (24h rule)
+### 10.1 Turn Auto-Pass (24h rule)
 
 Si es tu turno y no escribís en 24h, el turno pasa al otro jugador automáticamente. Implementación:
 
@@ -635,6 +622,4 @@ Esto ya está parcialmente implementado. Documentar como convención para consis
 | Win | Dónde | Effort |
 |-----|-------|--------|
 | HP 0 = pantalla especial con texto narrativo | home o modal | 2h |
-| "Story updated 2h ago by [name]" en home | home-screen | 30min |
-| Weekly ritual completion % en home | home-screen | 1h |
 | Streak badge prominente en ritual card | rituals-list | 30min |
