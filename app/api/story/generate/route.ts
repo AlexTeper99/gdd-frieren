@@ -7,7 +7,8 @@ import { buildNarrativeContext } from "@/lib/prompts/build-context";
 import { updateNarrativeMemory } from "@/lib/narrative/memory";
 import { db } from "@/lib/db";
 import { storyEntries, users, rituals } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
+import { eq, and, desc, asc } from "drizzle-orm";
+import { getLocalDate } from "@/lib/shared/constants";
 
 const gateway = createGateway({
   apiKey: process.env.AI_GATEWAY_API_KEY ?? "",
@@ -52,11 +53,21 @@ ${context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n
   }`;
 
   // Generate narrative
-  const { text } = await generateText({
-    model: gateway("anthropic/claude-sonnet-4.5"),
-    system: buildSystemPrompt(trigger),
-    prompt: userMessage,
-  });
+  let text: string;
+  try {
+    const result = await generateText({
+      model: gateway("anthropic/claude-sonnet-4.6"),
+      system: buildSystemPrompt(trigger),
+      prompt: userMessage,
+    });
+    text = result.text;
+  } catch (error) {
+    console.error("[Story] AI generation failed:", error);
+    return NextResponse.json(
+      { error: "No se pudo generar la continuación. Intentá de nuevo." },
+      { status: 500 }
+    );
+  }
 
   // Get next turno number
   const [lastEntry] = await db
@@ -66,10 +77,10 @@ ${context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n
     .limit(1);
 
   const nextTurno = (lastEntry?.turnoNumero ?? 0) + 1;
-  const today = new Date().toISOString().split("T")[0];
+  const today = getLocalDate();
 
   // Build snapshots
-  const allUsers = await db.select().from(users);
+  const allUsers = await db.select().from(users).orderBy(asc(users.id));
   const buildSnapshot = async (user: (typeof allUsers)[0]) => {
     const userRituals = await db
       .select({ descripcion: rituals.descripcion, racha: rituals.racha })
@@ -92,6 +103,7 @@ ${context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n
     userId,
     fecha: today,
     turnoNumero: nextTurno,
+    tipo: trigger,
     textoJugador: textoJugador ?? null,
     textoIa: text,
     snapshotJ1,
@@ -100,7 +112,11 @@ ${context.otroJugador ? `OTRO JUGADOR:\n${JSON.stringify(context.otroJugador)}\n
 
   // Update narrative memory (async, don't block response)
   const fullEntry = `${textoJugador ? `Jugador: ${textoJugador}\n\n` : ""}IA: ${text}`;
-  updateNarrativeMemory(fullEntry, nextTurno).catch(console.error);
+  try {
+    await updateNarrativeMemory(fullEntry, nextTurno);
+  } catch (error) {
+    console.error("[Story] Memory update failed:", error);
+  }
 
   return NextResponse.json({ text, turnoNumero: nextTurno });
 }

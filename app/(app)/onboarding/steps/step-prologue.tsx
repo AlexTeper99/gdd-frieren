@@ -12,17 +12,32 @@ export function StepPrologue({ userId }: Props) {
   const [prologueText, setPrologueText] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [completing, setCompleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function generatePrologue() {
     setLoading(true);
-    const res = await fetch("/api/story/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trigger: "prologo" }),
-    });
-    const data = await res.json();
-    setPrologueText(data.text);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/story/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trigger: "prologo" }),
+      });
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Error al generar el prólogo");
+        setLoading(false);
+        return;
+      }
+
+      const data = await res.json();
+      setPrologueText(data.text);
+    } catch {
+      setError("Error de conexión. Verificá tu internet e intentá de nuevo.");
+    }
     setLoading(false);
   }
 
@@ -50,6 +65,18 @@ export function StepPrologue({ userId }: Props) {
         <p className="py-12 text-center text-sm opacity-40">
           Escribiendo tu historia...
         </p>
+      )}
+
+      {error && (
+        <div className="mb-4 rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-sm text-red-400">
+          {error}
+          <button
+            onClick={generatePrologue}
+            className="ml-2 underline opacity-60 hover:opacity-100"
+          >
+            Reintentar
+          </button>
+        </div>
       )}
 
       {prologueText && (

@@ -21,22 +21,36 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
   const [text, setText] = useState("");
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   async function handleSubmit() {
     if (!text.trim()) return;
     setGenerating(true);
+    setError(null);
 
-    const res = await fetch("/api/story/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ trigger: "diario", textoJugador: text }),
-    });
+    try {
+      const res = await fetch("/api/story/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trigger: "diario", textoJugador: text }),
+      });
 
-    const data = await res.json();
-    setResult(data.text);
-    setGenerating(false);
-    router.refresh();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Error al generar la historia");
+        setGenerating(false);
+        return;
+      }
+
+      const data = await res.json();
+      setResult(data.text);
+      setGenerating(false);
+      router.refresh();
+    } catch {
+      setError("Error de conexión. Verificá tu internet e intentá de nuevo.");
+      setGenerating(false);
+    }
   }
 
   return (
@@ -94,6 +108,17 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
           >
             {generating ? "Escribiendo..." : "Enviar"}
           </button>
+      {error && (
+        <div className="rounded-lg border border-red-500/20 bg-red-500/5 p-3 text-sm text-red-400">
+          {error}
+          <button
+            onClick={() => { setError(null); }}
+            className="ml-2 underline opacity-60 hover:opacity-100"
+          >
+            Reintentar
+          </button>
+        </div>
+      )}
         </>
       )}
 
