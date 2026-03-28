@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { signOutAction } from "./actions";
 
 const ARCHETYPE_ICONS: Record<string, string> = {
   paladin: "⚔️",
@@ -125,7 +126,7 @@ export function HomeScreen({
         </Link>
       )}
 
-      <form action="/api/auth/signout" method="POST" className="mt-4">
+      <form action={signOutAction} className="mt-4">
         <button
           type="submit"
           className="w-full rounded-xl border border-white/10 py-2 text-xs opacity-25 hover:opacity-50"
