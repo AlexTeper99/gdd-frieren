@@ -9,7 +9,7 @@ const VALID_USERS = [
   { email: "daiana.goldberg@gmail.com", name: "Daiana" },
 ] as const;
 
-const VALID_PASSWORD = "alexydaiu2026!";
+const VALID_PASSWORD = process.env.AUTH_PASSWORD!;
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db, {
