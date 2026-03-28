@@ -1,7 +1,11 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { createRitual, toggleRitualActive } from "@/features/profile/actions";
+import { useActionState, useState, useRef } from "react";
+import {
+  createRitual,
+  toggleRitualActive,
+  updateRitual,
+} from "@/features/profile/actions";
 
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
 
@@ -17,6 +21,8 @@ type Ritual = {
 
 export function EditRituals({ rituals }: { rituals: Ritual[] }) {
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
 
   function toggleDay(d: string) {
     setSelectedDays((prev) =>
@@ -24,14 +30,52 @@ export function EditRituals({ rituals }: { rituals: Ritual[] }) {
     );
   }
 
-  async function handleCreate(_prev: unknown, formData: FormData) {
+  function startEditing(r: Ritual) {
+    setEditingId(r.id);
+    setSelectedDays([...r.dias]);
+
+    // Populate form fields after React re-renders
+    setTimeout(() => {
+      if (!formRef.current) return;
+      const form = formRef.current;
+      (form.elements.namedItem("descripcion") as HTMLInputElement).value =
+        r.descripcion;
+      (form.elements.namedItem("horaInicio") as HTMLInputElement).value =
+        r.horaInicio;
+      (form.elements.namedItem("horaFin") as HTMLInputElement).value =
+        r.horaFin;
+      (form.elements.namedItem("lugar") as HTMLInputElement).value = r.lugar;
+    }, 0);
+  }
+
+  function cancelEditing() {
+    setEditingId(null);
+    setSelectedDays([]);
+    if (formRef.current) formRef.current.reset();
+  }
+
+  async function handleSubmit(_prev: unknown, formData: FormData) {
     selectedDays.forEach((d) => formData.append("dias", d));
+
+    if (editingId) {
+      const result = await updateRitual(editingId, formData);
+      if (result.success) {
+        setEditingId(null);
+        setSelectedDays([]);
+        if (formRef.current) formRef.current.reset();
+      }
+      return result;
+    }
+
     const result = await createRitual(formData);
-    if (result.success) setSelectedDays([]);
+    if (result.success) {
+      setSelectedDays([]);
+      if (formRef.current) formRef.current.reset();
+    }
     return result;
   }
 
-  const [state, action, pending] = useActionState(handleCreate, null);
+  const [state, action, pending] = useActionState(handleSubmit, null);
 
   return (
     <div className="flex flex-col gap-3">
@@ -56,22 +100,31 @@ export function EditRituals({ rituals }: { rituals: Ritual[] }) {
           <div className="mt-1 text-[11px] opacity-40">
             {r.dias.join(", ")} · {r.horaInicio}-{r.horaFin} · {r.lugar}
           </div>
-          <button
-            onClick={() => toggleRitualActive(r.id)}
-            className="mt-2 rounded-lg border border-hq-red-border bg-hq-red-bg px-3 py-1 text-[11px] text-hq-red"
-          >
-            {r.activo ? "Desactivar" : "Activar"}
-          </button>
+          <div className="mt-2 flex gap-2">
+            <button
+              onClick={() => startEditing(r)}
+              className="rounded-lg border border-hq-purple-border bg-hq-purple-bg px-3 py-1 text-[11px] text-hq-purple"
+            >
+              Editar
+            </button>
+            <button
+              onClick={() => toggleRitualActive(r.id)}
+              className="rounded-lg border border-hq-red-border bg-hq-red-bg px-3 py-1 text-[11px] text-hq-red"
+            >
+              {r.activo ? "Desactivar" : "Activar"}
+            </button>
+          </div>
         </div>
       ))}
 
       <hr className="border-hq-border" />
 
-      {/* Add new */}
+      {/* Add new / Edit */}
       <div className="font-mono text-[10px] uppercase opacity-40">
-        Agregar nuevo ritual
+        {editingId ? "Editar ritual" : "Agregar nuevo ritual"}
       </div>
       <form
+        ref={formRef}
         action={action}
         className="rounded-xl border border-hq-purple-border bg-hq-purple-bg p-3"
       >
@@ -140,13 +193,24 @@ export function EditRituals({ rituals }: { rituals: Ritual[] }) {
           <p className="mb-2 text-xs text-hq-red">{state.error}</p>
         )}
 
-        <button
-          type="submit"
-          disabled={pending}
-          className="w-full rounded-xl border border-hq-purple-border bg-hq-purple-bg py-2.5 font-semibold text-hq-purple disabled:opacity-30"
-        >
-          + Agregar ritual
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="submit"
+            disabled={pending}
+            className="flex-1 rounded-xl border border-hq-purple-border bg-hq-purple-bg py-2.5 font-semibold text-hq-purple disabled:opacity-30"
+          >
+            {editingId ? "Guardar cambios" : "+ Agregar ritual"}
+          </button>
+          {editingId && (
+            <button
+              type="button"
+              onClick={cancelEditing}
+              className="rounded-xl border border-hq-border bg-hq-bg-card px-4 py-2.5 text-sm opacity-60"
+            >
+              Cancelar
+            </button>
+          )}
+        </div>
       </form>
     </div>
   );

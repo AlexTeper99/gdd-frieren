@@ -89,3 +89,36 @@ export async function toggleRitualActive(ritualId: string) {
   revalidatePath("/profile/rituals");
   return { success: true };
 }
+
+export async function updateRitual(ritualId: string, formData: FormData) {
+  const { user } = await verifySession();
+
+  const [ritual] = await db
+    .select()
+    .from(rituals)
+    .where(eq(rituals.id, ritualId));
+
+  if (!ritual || ritual.userId !== user.id) return { error: "No encontrado" };
+
+  const descripcion = formData.get("descripcion") as string;
+  const dias = formData.getAll("dias") as string[];
+  const horaInicio = formData.get("horaInicio") as string;
+  const horaFin = formData.get("horaFin") as string;
+  const lugar = formData.get("lugar") as string;
+
+  if (!descripcion || !dias.length || !horaInicio || !horaFin || !lugar) {
+    return { error: "Todos los campos son obligatorios" };
+  }
+
+  if (horaInicio >= horaFin) {
+    return { error: "La hora de fin debe ser después del inicio" };
+  }
+
+  await db
+    .update(rituals)
+    .set({ descripcion, dias, horaInicio, horaFin, lugar })
+    .where(eq(rituals.id, ritualId));
+
+  revalidatePath("/profile/rituals");
+  return { success: true };
+}
