@@ -4,6 +4,7 @@ import { users, rituals, ritualLogs } from "@/lib/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { HomeScreen } from "./home-screen";
+import { getLocalDate, getLocalDay, getLocalDayIndex } from "@/lib/shared/constants";
 
 export default async function HomePage() {
   const { user } = await verifySession();
@@ -15,8 +16,17 @@ export default async function HomePage() {
 
   if (!me?.onboardingCompleted) redirect("/onboarding");
 
-  // Today's ritual count
-  const today = new Date().toISOString().split("T")[0];
+  // Today's ritual count (filtered by day of week)
+  const today = getLocalDate();
+  const todayDay = getLocalDay();
+
+  const allActiveRituals = await db
+    .select()
+    .from(rituals)
+    .where(and(eq(rituals.userId, user.id!), eq(rituals.activo, true)));
+
+  const todayRituals = allActiveRituals.filter((r) => r.dias.includes(todayDay));
+
   const todayLogs = await db
     .select()
     .from(ritualLogs)
@@ -27,11 +37,6 @@ export default async function HomePage() {
         eq(ritualLogs.cumplido, true)
       )
     );
-
-  const totalRituals = await db
-    .select()
-    .from(rituals)
-    .where(and(eq(rituals.userId, user.id!), eq(rituals.activo, true)));
 
   return (
     <HomeScreen
@@ -52,8 +57,8 @@ export default async function HomePage() {
           : null
       }
       ritualsCompleted={todayLogs.length}
-      ritualsTotal={totalRituals.length}
-      isSunday={new Date().getDay() === 0}
+      ritualsTotal={todayRituals.length}
+      isSunday={getLocalDayIndex() === 0}
     />
   );
 }
