@@ -1,12 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { saveMission, saveRitual } from "@/lib/actions/onboarding";
+import { saveMissionAndRituals } from "@/lib/actions/onboarding";
 
 const CATEGORIES = ["Sueño", "Alimentación", "Movimiento", "Mente", "Cuidado"];
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
 
-type RitualEntry = {
+type RitualDraft = {
   id: string;
   descripcion: string;
   dias: string[];
@@ -16,17 +16,17 @@ type RitualEntry = {
 };
 
 type Props = {
-  rituals: RitualEntry[];
+  rituals: RitualDraft[];
   onComplete: () => void;
 };
 
 export function StepMission({ rituals: initialRituals, onComplete }: Props) {
   const [category, setCategory] = useState("");
-  const [rituals, setRituals] = useState<RitualEntry[]>(initialRituals);
-  const [saving, setSaving] = useState(false);
+  const [rituals, setRituals] = useState<RitualDraft[]>(initialRituals);
+  const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Form fields as controlled state
+  // Form fields — 100% local
   const [descripcion, setDescripcion] = useState("");
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
   const [horaInicio, setHoraInicio] = useState("");
@@ -39,56 +39,52 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
     );
   }
 
-  function resetForm() {
+  // Add to local list only — no DB call
+  function handleAddRitual() {
+    if (!descripcion || !selectedDays.length || !horaInicio || !horaFin || !lugar) {
+      setError("Completá todos los campos del ritual");
+      return;
+    }
+    setError(null);
+    setRituals((prev) => [
+      ...prev,
+      { id: crypto.randomUUID(), descripcion, dias: [...selectedDays], horaInicio, horaFin, lugar },
+    ]);
+    // Reset form for next ritual
     setDescripcion("");
     setSelectedDays([]);
     setHoraInicio("");
     setHoraFin("");
     setLugar("");
-    setError(null);
-  }
-
-  async function handleAddRitual() {
-    if (!descripcion || !selectedDays.length || !horaInicio || !horaFin || !lugar) {
-      setError("Completá todos los campos del ritual");
-      return;
-    }
-
-    setSaving(true);
-    setError(null);
-
-    const fd = new FormData();
-    fd.set("descripcion", descripcion);
-    selectedDays.forEach((d) => fd.append("dias", d));
-    fd.set("horaInicio", horaInicio);
-    fd.set("horaFin", horaFin);
-    fd.set("lugar", lugar);
-
-    const result = await saveRitual(fd);
-
-    if (result.success) {
-      setRituals((prev) => [
-        ...prev,
-        { id: crypto.randomUUID(), descripcion, dias: selectedDays, horaInicio, horaFin, lugar },
-      ]);
-      resetForm();
-    } else {
-      setError(result.error ?? "Error al guardar");
-    }
-
-    setSaving(false);
   }
 
   function removeRitual(id: string) {
     setRituals((prev) => prev.filter((r) => r.id !== id));
   }
 
+  // Save everything to DB only on "Siguiente"
   async function handleNext() {
     if (!category || rituals.length === 0) return;
-    const fd = new FormData();
-    fd.set("misionCategoria", category);
-    const result = await saveMission(fd);
-    if (result.success) onComplete();
+    setSubmitting(true);
+    setError(null);
+
+    const result = await saveMissionAndRituals(
+      category,
+      rituals.map(({ descripcion, dias, horaInicio, horaFin, lugar }) => ({
+        descripcion,
+        dias,
+        horaInicio,
+        horaFin,
+        lugar,
+      }))
+    );
+
+    if (result.success) {
+      onComplete();
+    } else {
+      setError(result.error ?? "Error al guardar");
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -127,7 +123,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           {rituals.map((r) => (
             <div
               key={r.id}
-              className="mb-2 flex items-start gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+              className="mb-2 flex items-start gap-2 rounded-lg border border-green-500/20 bg-green-500/5 px-3 py-2"
             >
               <div className="flex-1">
                 <div className="text-sm font-medium">{r.descripcion}</div>
@@ -149,9 +145,9 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
 
       <hr className="my-4 border-white/5" />
 
-      {/* Add ritual form — controlled inputs */}
+      {/* Add ritual form — 100% local, no server calls */}
       <label className="mb-2 block font-mono text-xs uppercase opacity-40">
-        Agregar ritual
+        Nuevo ritual
       </label>
       <div className="rounded-lg border border-white/10 bg-white/5 p-3">
         <label className="mb-1 block font-mono text-[10px] uppercase opacity-40">
@@ -226,20 +222,19 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
         <button
           type="button"
           onClick={handleAddRitual}
-          disabled={saving}
-          className="w-full rounded-lg border border-white/10 py-2 text-sm opacity-60 hover:opacity-80 disabled:opacity-30"
+          className="w-full rounded-lg border border-white/10 py-2 text-sm opacity-60 hover:opacity-80"
         >
-          {saving ? "Guardando..." : "+ Agregar ritual"}
+          + Agregar a la lista
         </button>
       </div>
 
       <button
         type="button"
         onClick={handleNext}
-        disabled={!category || rituals.length === 0}
+        disabled={!category || rituals.length === 0 || submitting}
         className="mt-4 w-full rounded-xl border border-purple-500/30 bg-purple-500/15 py-3 font-semibold text-purple-300 disabled:opacity-30"
       >
-        Siguiente
+        {submitting ? "Guardando..." : "Siguiente"}
       </button>
     </div>
   );

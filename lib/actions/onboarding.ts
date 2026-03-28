@@ -29,41 +29,38 @@ export async function saveCharacter(formData: FormData) {
   return { success: true };
 }
 
-export async function saveMission(formData: FormData) {
+export async function saveMissionAndRituals(
+  misionCategoria: string,
+  ritualsData: {
+    descripcion: string;
+    dias: string[];
+    horaInicio: string;
+    horaFin: string;
+    lugar: string;
+  }[]
+) {
   const { user } = await verifySession();
 
-  const misionCategoria = formData.get("misionCategoria") as string;
   if (!misionCategoria) return { error: "Elegí una categoría" };
+  if (ritualsData.length === 0) return { error: "Agregá al menos un ritual" };
 
+  // Save mission category
   await db
     .update(users)
     .set({ misionCategoria })
     .where(eq(users.id, user.id!));
 
-  return { success: true };
-}
-
-export async function saveRitual(formData: FormData) {
-  const { user } = await verifySession();
-
-  const descripcion = formData.get("descripcion") as string;
-  const dias = formData.getAll("dias") as string[];
-  const horaInicio = formData.get("horaInicio") as string;
-  const horaFin = formData.get("horaFin") as string;
-  const lugar = formData.get("lugar") as string;
-
-  if (!descripcion || !dias.length || !horaInicio || !horaFin || !lugar) {
-    return { error: "Todos los campos son obligatorios" };
-  }
-
-  await db.insert(rituals).values({
-    userId: user.id!,
-    descripcion,
-    dias,
-    horaInicio,
-    horaFin,
-    lugar,
-  });
+  // Save all rituals in batch
+  await db.insert(rituals).values(
+    ritualsData.map((r) => ({
+      userId: user.id!,
+      descripcion: r.descripcion,
+      dias: r.dias,
+      horaInicio: r.horaInicio,
+      horaFin: r.horaFin,
+      lugar: r.lugar,
+    }))
+  );
 
   revalidatePath("/onboarding");
   return { success: true };
