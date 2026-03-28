@@ -8,17 +8,19 @@ export type PlayerContext = {
   rituales: { nombre: string; racha: number }[];
 };
 
+export type WorldState = {
+  npcs: { nombre: string; estado: string; ultima_aparicion: number }[];
+  zonas: { nombre: string; estado: string }[];
+  hilos_abiertos: string[];
+  hechos_inmutables: string[];
+};
+
 export type NarrativeContext = {
   trigger: TriggerType;
   jugadorActivo: PlayerContext;
   otroJugador: PlayerContext | null;
   textoJugador: string | null;
   resumen: string | null;
-  worldState: {
-    npcs: { nombre: string; estado: string; ultimaAparicion: number }[];
-    zonas: { nombre: string; estado: string }[];
-    hilosAbiertos: string[];
-    hechosInmutables: string[];
-  } | null;
+  worldState: WorldState | null;
   entradasRecientes: string[];
 };
