@@ -43,7 +43,7 @@ export default function RootLayout({
       <head>
         <link rel="apple-touch-icon" href="/icons/icon-192.png" />
       </head>
-      <body className="min-h-full flex flex-col bg-[#0a0a0f] text-[#e8e4df]">
+      <body className="min-h-full flex flex-col bg-hq-bg text-hq-text">
         {children}
       </body>
     </html>
