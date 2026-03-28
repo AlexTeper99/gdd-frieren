@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { resolveUserId } from "@/lib/dal";
+import { auth } from "@/features/shared/auth";
+import { resolveUserId } from "@/features/shared/auth/dal";
 import { generateText, createGateway } from "ai";
-import { buildSystemPrompt } from "@/lib/prompts";
-import { buildNarrativeContext } from "@/lib/prompts/build-context";
-import { updateNarrativeMemory } from "@/lib/narrative/memory";
-import { db } from "@/lib/db";
-import { storyEntries, users, rituals } from "@/lib/db/schema";
+import { buildSystemPrompt } from "@/features/story/prompts";
+import { buildNarrativeContext } from "@/features/story/prompts/build-context";
+import { updateNarrativeMemory } from "@/features/story/memory";
+import { db } from "@/features/shared/db";
+import { storyEntries, users, rituals } from "@/features/shared/db/schema";
 import { eq, and, desc, asc } from "drizzle-orm";
-import { getLocalDate } from "@/lib/shared/constants";
-import { getStoryState } from "@/lib/actions/story";
+import { getLocalDate } from "@/features/shared/constants";
+import { getStoryState } from "@/features/story/actions";
 
 const gateway = createGateway({
   apiKey: process.env.AI_GATEWAY_API_KEY ?? "",

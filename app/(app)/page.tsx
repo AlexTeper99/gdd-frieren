@@ -1,10 +1,10 @@
-import { verifySession } from "@/lib/dal";
-import { db } from "@/lib/db";
-import { users, rituals, ritualLogs } from "@/lib/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
+import { db } from "@/features/shared/db";
+import { users, rituals, ritualLogs } from "@/features/shared/db/schema";
 import { eq, and } from "drizzle-orm";
 import { redirect } from "next/navigation";
 import { HomeScreen } from "./home-screen";
-import { getLocalDate, getLocalDay, getLocalDayIndex } from "@/lib/shared/constants";
+import { getLocalDate, getLocalDay, getLocalDayIndex } from "@/features/shared/constants";
 
 export default async function HomePage() {
   const { user } = await verifySession();

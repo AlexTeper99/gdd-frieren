@@ -1,6 +1,6 @@
-import { verifySession } from "@/lib/dal";
-import { db } from "@/lib/db";
-import { rituals } from "@/lib/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
+import { db } from "@/features/shared/db";
+import { rituals } from "@/features/shared/db/schema";
 import { eq } from "drizzle-orm";
 import { EditRituals } from "./edit-rituals";
 

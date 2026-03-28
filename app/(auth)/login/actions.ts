@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/lib/auth";
+import { signIn } from "@/features/shared/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 export async function loginWithCredentials(

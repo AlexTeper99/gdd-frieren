@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { saveMissionAndRituals } from "@/lib/actions/onboarding";
+import { saveMissionAndRituals } from "@/features/onboarding/actions";
 
 const CATEGORIES = ["Sueño", "Alimentación", "Movimiento", "Mente", "Cuidado"];
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];

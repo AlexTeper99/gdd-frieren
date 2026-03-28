@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { completeOnboarding } from "@/lib/actions/onboarding";
+import { completeOnboarding } from "@/features/onboarding/actions";
 import { useRouter } from "next/navigation";
 
 type Props = {

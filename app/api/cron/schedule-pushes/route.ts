@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { users, rituals } from "@/lib/db/schema";
+import { db } from "@/features/shared/db";
+import { users, rituals } from "@/features/shared/db/schema";
 import { eq, and } from "drizzle-orm";
-import { sendPushToUser } from "@/lib/push/send";
+import { sendPushToUser } from "@/features/push/send";
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get("authorization");

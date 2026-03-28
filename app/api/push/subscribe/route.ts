@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
-import { resolveUserId } from "@/lib/dal";
-import { db } from "@/lib/db";
-import { pushSubscriptions } from "@/lib/db/schema";
+import { auth } from "@/features/shared/auth";
+import { resolveUserId } from "@/features/shared/auth/dal";
+import { db } from "@/features/shared/db";
+import { pushSubscriptions } from "@/features/shared/db/schema";
 
 export async function POST(request: Request) {
   const session = await auth();

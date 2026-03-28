@@ -1,5 +1,5 @@
-import { verifySession } from "@/lib/dal";
-import { getStoryState } from "@/lib/actions/story";
+import { verifySession } from "@/features/shared/auth/dal";
+import { getStoryState } from "@/features/story/actions";
 import { StoryView } from "./story-view";
 
 export default async function StoryPage() {

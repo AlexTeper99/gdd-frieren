@@ -1,7 +1,7 @@
-import { verifySession } from "@/lib/dal";
-import { getCurrentPact } from "@/lib/actions/pact";
-import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { verifySession } from "@/features/shared/auth/dal";
+import { getCurrentPact } from "@/features/pact/actions";
+import { db } from "@/features/shared/db";
+import { users } from "@/features/shared/db/schema";
 import { PactView } from "./pact-view";
 
 export default async function PactPage() {

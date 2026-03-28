@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { createRitual, toggleRitualActive } from "@/lib/actions/profile";
+import { createRitual, toggleRitualActive } from "@/features/profile/actions";
 
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
 

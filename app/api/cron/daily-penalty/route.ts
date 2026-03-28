@@ -1,4 +1,4 @@
-import { penalizeUncompletedRituals } from "@/lib/actions/hp";
+import { penalizeUncompletedRituals } from "@/features/rituals/penalty";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {

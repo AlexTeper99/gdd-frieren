@@ -1,7 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
-import { submitPactAnswers } from "@/lib/actions/pact";
+import { submitPactAnswers } from "@/features/pact/actions";
 
 type Props = {
   myAnswers: Record<string, string> | null;

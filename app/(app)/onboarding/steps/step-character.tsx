@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useActionState } from "react";
-import { saveCharacter } from "@/lib/actions/onboarding";
+import { saveCharacter } from "@/features/onboarding/actions";
 
 const ARCHETYPES = [
   { value: "paladin", label: "Paladín", icon: "⚔️", sub: "Himmel" },

@@ -1,4 +1,4 @@
-import { verifySession } from "@/lib/dal";
+import { verifySession } from "@/features/shared/auth/dal";
 import { PushRegistration } from "./_components/push-registration";
 
 export default async function AppLayout({

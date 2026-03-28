@@ -1,5 +1,5 @@
-import { verifySession } from "@/lib/dal";
-import { getTodayRituals } from "@/lib/actions/rituals";
+import { verifySession } from "@/features/shared/auth/dal";
+import { getTodayRituals } from "@/features/rituals/actions";
 import { RitualsList } from "./rituals-list";
 
 export default async function RitualsPage() {

@@ -1,6 +1,6 @@
 "use client";
 
-import { markRitualComplete } from "@/lib/actions/rituals";
+import { markRitualComplete } from "@/features/rituals/actions";
 import { useState } from "react";
 
 type Ritual = {

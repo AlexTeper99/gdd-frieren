@@ -1,5 +1,5 @@
-import { verifySession } from "@/lib/dal";
-import { getProfile } from "@/lib/actions/profile";
+import { verifySession } from "@/features/shared/auth/dal";
+import { getProfile } from "@/features/profile/actions";
 import { ProfileView } from "./profile-view";
 import { redirect } from "next/navigation";
 
