@@ -140,6 +140,15 @@ export function ProfileView({
             />
           ))}
         </div>
+        <div className="mt-2 flex items-center gap-2 text-[10px] text-hq-text-faint">
+          <span>Menos</span>
+          <div className="h-3 w-3 rounded-sm" style={{ background: "rgba(255,255,255,0.03)" }} />
+          <div className="h-3 w-3 rounded-sm" style={{ background: "rgba(76,175,80,0.2)" }} />
+          <div className="h-3 w-3 rounded-sm" style={{ background: "rgba(76,175,80,0.5)" }} />
+          <div className="h-3 w-3 rounded-sm" style={{ background: "rgba(76,175,80,0.8)" }} />
+          <div className="h-3 w-3 rounded-sm bg-hq-green" />
+          <span>Más</span>
+        </div>
       </div>
 
       {isMe && (
