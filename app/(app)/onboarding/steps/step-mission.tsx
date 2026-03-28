@@ -6,6 +6,29 @@ import { saveMissionAndRituals } from "@/features/onboarding/actions";
 const CATEGORIES = ["Sueño", "Alimentación", "Movimiento", "Mente", "Cuidado"];
 const DAYS = ["lun", "mar", "mie", "jue", "vie", "sab", "dom"];
 
+const SUGGESTED_RITUALS: Record<string, { descripcion: string; dias: string[]; horaInicio: string; horaFin: string; lugar: string }[]> = {
+  "Sueño": [
+    { descripcion: "Dormir antes de las 23", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "22:30", horaFin: "23:00", lugar: "Habitación" },
+    { descripcion: "No pantallas 1h antes de dormir", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "22:00", horaFin: "22:30", lugar: "Casa" },
+  ],
+  "Alimentación": [
+    { descripcion: "Cocinar el desayuno", dias: ["lun","mar","mie","jue","vie"], horaInicio: "07:00", horaFin: "09:00", lugar: "Cocina" },
+    { descripcion: "Preparar almuerzo casero", dias: ["lun","mar","mie","jue","vie"], horaInicio: "12:00", horaFin: "13:00", lugar: "Cocina" },
+  ],
+  "Movimiento": [
+    { descripcion: "Caminar 30 minutos", dias: ["lun","mar","mie","jue","vie"], horaInicio: "07:00", horaFin: "08:00", lugar: "Barrio" },
+    { descripcion: "Ejercicio o deporte", dias: ["lun","mie","vie"], horaInicio: "18:00", horaFin: "19:00", lugar: "Gimnasio" },
+  ],
+  "Mente": [
+    { descripcion: "Meditar 10 minutos", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "07:00", horaFin: "07:30", lugar: "Habitación" },
+    { descripcion: "Leer 20 minutos", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "22:00", horaFin: "22:30", lugar: "Casa" },
+  ],
+  "Cuidado": [
+    { descripcion: "Tomar 2 litros de agua", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "08:00", horaFin: "22:00", lugar: "Donde sea" },
+    { descripcion: "Skincare noche", dias: ["lun","mar","mie","jue","vie","sab","dom"], horaInicio: "22:00", horaFin: "22:30", lugar: "Baño" },
+  ],
+};
+
 type RitualDraft = {
   id: string;
   descripcion: string;
@@ -18,9 +41,10 @@ type RitualDraft = {
 type Props = {
   rituals: RitualDraft[];
   onComplete: () => void;
+  onBack: () => void;
 };
 
-export function StepMission({ rituals: initialRituals, onComplete }: Props) {
+export function StepMission({ rituals: initialRituals, onComplete, onBack }: Props) {
   const [category, setCategory] = useState("");
   const [rituals, setRituals] = useState<RitualDraft[]>(initialRituals);
   const [submitting, setSubmitting] = useState(false);
@@ -32,6 +56,18 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
   const [horaInicio, setHoraInicio] = useState("");
   const [horaFin, setHoraFin] = useState("");
   const [lugar, setLugar] = useState("");
+
+  function handleCategorySelect(cat: string) {
+    setCategory(cat);
+    const suggestions = SUGGESTED_RITUALS[cat] ?? [];
+    const existingDescriptions = new Set(rituals.map(r => r.descripcion));
+    const newSuggestions = suggestions
+      .filter(s => !existingDescriptions.has(s.descripcion))
+      .map(s => ({ ...s, id: crypto.randomUUID() }));
+    if (newSuggestions.length > 0) {
+      setRituals(prev => [...prev, ...newSuggestions]);
+    }
+  }
 
   function toggleDay(day: string) {
     setSelectedDays((prev) =>
@@ -94,6 +130,14 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
         Tu foco y los hábitos que vas a sostener.
       </p>
 
+      <button
+        type="button"
+        onClick={onBack}
+        className="mb-4 text-xs text-hq-text-faint hover:text-hq-text-muted"
+      >
+        ← Volver al personaje
+      </button>
+
       <label className="mb-2 block font-mono text-xs uppercase opacity-40">
         Categoría
       </label>
@@ -102,7 +146,7 @@ export function StepMission({ rituals: initialRituals, onComplete }: Props) {
           <button
             key={c}
             type="button"
-            onClick={() => setCategory(c)}
+            onClick={() => handleCategorySelect(c)}
             className={`rounded-full border px-3 py-1.5 text-xs transition ${
               category === c
                 ? "border-hq-purple-border bg-hq-purple-bg text-hq-purple"
