@@ -552,17 +552,16 @@ CRON_SECRET=
 33. Turn auto-pass: si no escribís en 24h, el turno pasa al otro automáticamente
 34. Turn notification: push "es tu turno de escribir" (client-side, 1x/día)
 
-**Fase 6 — Accessibility + Offline**
-35. Service Worker: cache app shell (home, story, rituals, profile) para offline
-36. WCAG AA: verificar contraste de design tokens contra fondo oscuro
-37. aria-labels en forms, botones, heatmap
-38. Keyboard navigation en time pickers y day toggles
+**Fase 6 — Accessibility**
+35. WCAG AA: verificar contraste de design tokens contra fondo oscuro
+36. aria-labels en forms, botones, heatmap
+37. Keyboard navigation en time pickers y day toggles
 
 **Fase 7 — Deploy**
-39. .env.local.example completo
-40. Limpiar vercel.json (sacar cron push)
-41. Migration en production DB
-42. Deploy + test
+38. .env.local.example completo
+39. Limpiar vercel.json (sacar cron push)
+40. Migration en production DB
+41. Deploy + test
 
 ---
 
@@ -584,31 +583,7 @@ Después de que ambos completan onboarding:
 - El primer turno diario es del primer jugador que completó onboarding (por `createdAt`)
 - Prólogos siempre visibles en story archive como primeras entradas
 
-### 10.4 Offline Support (Service Worker)
-
-Agregar cache strategy al `public/sw.js`:
-
-```javascript
-// Cache app shell on install
-const CACHE_NAME = 'hq-v1';
-const SHELL = ['/', '/rituals', '/story', '/pact', '/profile'];
-
-self.addEventListener('install', (e) => {
-  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(SHELL)));
-});
-
-self.addEventListener('fetch', (e) => {
-  // Network-first for API, cache-first for pages
-  if (e.request.url.includes('/api/')) return; // skip API caching
-  e.respondWith(
-    fetch(e.request).catch(() => caches.match(e.request))
-  );
-});
-```
-
-Limitación: datos offline son stale. Marking rituals offline NO se soporta en MVP — mostrar "Sin conexión" si fetch falla.
-
-### 10.5 React 19 Form Pattern
+### 10.4 React 19 Form Pattern
 
 Estandarizar en todos los forms:
 - **Server actions con `useActionState`** para forms simples (pact, character)
