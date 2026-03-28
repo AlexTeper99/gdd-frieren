@@ -48,6 +48,7 @@ export function OnboardingFlow({ userId, currentCharacter, rituals }: Props) {
         <StepMission
           rituals={rituals}
           onComplete={() => setStep(3)}
+          onBack={() => setStep(1)}
         />
       )}
       {step === 3 && <StepPrologue userId={userId} />}
