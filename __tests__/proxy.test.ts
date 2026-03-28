@@ -20,7 +20,7 @@ describe("proxy matcher", () => {
     expect(
       unstable_doesMiddlewareMatch({
         config,
-        url: "/api/auth/callback/resend",
+        url: "/api/auth/callback/credentials",
         nextConfig: {},
       })
     ).toBe(false);
