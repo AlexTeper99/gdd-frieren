@@ -37,17 +37,27 @@ export function ProfileView({
 }) {
   const { user, rituals, heatmap } = profile;
 
-  // Build 28-day heatmap grid
-  const days: { date: string; ratio: number }[] = [];
-  for (let i = 27; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().split("T")[0];
+  // Build heatmap grid aligned to Monday start
+  const days: { date: string; ratio: number; empty?: boolean }[] = [];
+  const fourWeeksAgo = new Date();
+  fourWeeksAgo.setDate(fourWeeksAgo.getDate() - 27);
+  const dow = fourWeeksAgo.getDay(); // 0=Sun
+  const mondayOffset = dow === 0 ? -6 : 1 - dow;
+  const startMonday = new Date(fourWeeksAgo);
+  startMonday.setDate(fourWeeksAgo.getDate() + mondayOffset);
+  const today = new Date();
+  const current = new Date(startMonday);
+  while (current <= today) {
+    const dateStr = current.toISOString().split("T")[0];
     const data = heatmap[dateStr];
     days.push({
       date: dateStr,
       ratio: data ? data.completed / Math.max(data.total, 1) : 0,
     });
+    current.setDate(current.getDate() + 1);
+  }
+  while (days.length % 7 !== 0) {
+    days.push({ date: "", ratio: 0, empty: true });
   }
 
   return (
@@ -131,8 +141,9 @@ export function ProfileView({
               key={d.date}
               className="aspect-square rounded-sm"
               style={{
-                backgroundColor:
-                  d.ratio === 0
+                backgroundColor: d.empty
+                  ? "transparent"
+                  : d.ratio === 0
                     ? "rgba(255,255,255,0.03)"
                     : `rgba(76,175,80,${Math.max(0.15, d.ratio)})`,
               }}
