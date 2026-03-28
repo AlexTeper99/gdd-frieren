@@ -9,6 +9,7 @@ import { db } from "@/lib/db";
 import { storyEntries, users, rituals } from "@/lib/db/schema";
 import { eq, and, desc, asc } from "drizzle-orm";
 import { getLocalDate } from "@/lib/shared/constants";
+import { getStoryState } from "@/lib/actions/story";
 
 const gateway = createGateway({
   apiKey: process.env.AI_GATEWAY_API_KEY ?? "",
@@ -25,6 +26,17 @@ export async function POST(request: Request) {
 
   if (trigger !== "prologo" && trigger !== "diario") {
     return NextResponse.json({ error: "Invalid trigger" }, { status: 400 });
+  }
+
+  // Server-side turn validation (prevent out-of-turn writes)
+  if (trigger === "diario") {
+    const storyState = await getStoryState(userId);
+    if (!storyState.isMyTurn) {
+      return NextResponse.json(
+        { error: "No es tu turno de escribir" },
+        { status: 403 }
+      );
+    }
   }
 
   // Build context
