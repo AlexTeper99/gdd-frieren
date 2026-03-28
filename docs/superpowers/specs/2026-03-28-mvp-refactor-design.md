@@ -534,22 +534,107 @@ CRON_SECRET=
 **Fase 4 — Design Tokens + UX**
 18. CSS variables en globals.css
 19. Metadata + PWA tags en layout
-20. Loading states en todas las pantallas
-21. Error states con retry
-22. Empty states con CTAs
+20. `loading.tsx` para páginas clave (story, rituals, profile)
+21. `error.tsx` global en app/(app)/
+22. Error states con retry en todas las pantallas async
+23. Empty states con CTAs (0 rituals, 0 story entries, partner sin onboarding)
+24. Loading states en todos los botones async (ritual mark, story submit, pact sign)
 
 **Fase 5 — New Features**
-23. Story archive page
-24. Story pagination
-25. Edit ritual
-26. Rituales sugeridos por categoría
-27. Heatmap alignment + leyenda
-28. Botón atrás en onboarding
-29. Pact sealed view con labels
-30. Client-side push scheduling
+25. Story archive page (`/story/archive`) — paginado, cronológico, texto completo
+26. Story pagination en `/story` (reemplazar limit 10)
+27. Edit ritual existente (updateRitual action + form)
+28. Rituales sugeridos por categoría en onboarding
+29. Heatmap alignment a día de semana + leyenda
+30. Botón atrás en onboarding steps
+31. Pact sealed view con labels por pregunta
+32. Client-side push scheduling (reemplaza cron 30min)
+33. Turn auto-pass: si no escribís en 24h, el turno pasa al otro automáticamente
+34. Turn notification: push "es tu turno de escribir" (client-side, 1x/día)
 
-**Fase 6 — Deploy**
-31. .env.local.example
-32. Limpiar vercel.json (sacar cron push)
-33. Migration en production DB
-34. Deploy + test
+**Fase 6 — Accessibility + Offline**
+35. Service Worker: cache app shell (home, story, rituals, profile) para offline
+36. WCAG AA: verificar contraste de design tokens contra fondo oscuro
+37. aria-labels en forms, botones, heatmap
+38. Keyboard navigation en time pickers y day toggles
+
+**Fase 7 — Deploy**
+39. .env.local.example completo
+40. Limpiar vercel.json (sacar cron push)
+41. Migration en production DB
+42. Deploy + test
+
+---
+
+## 10. Additions from Spec Review (post-audit)
+
+### 10.1 HP Feedback Clarity
+
+El prompt actual deja la interpretación de HP "libre" — la IA podría no diferenciar HP 80 vs HP 30.
+
+Agregar al system prompt (`features/story/prompts/base.ts`), dentro de `<calibracion>`:
+
+```
+Si HP < 50, hacé que el mundo sea NOTORIAMENTE más difícil:
+aliados menos disponibles, caminos más largos, una pérdida
+concreta por día hasta que HP se recupere. La diferencia
+entre HP alto y HP bajo debe ser obvia para el lector.
+```
+
+### 10.2 Turn Auto-Pass (24h rule)
+
+Si es tu turno y no escribís en 24h, el turno pasa al otro jugador automáticamente. Implementación:
+
+- En `getStoryState()`: si lastDiarioEntry tiene más de 24h Y es del otro jugador, `isMyTurn = true` para ambos (el siguiente que escriba toma el turno)
+- No requiere cron — se calcula on-demand al abrir `/story`
+- Si NINGUNO escribe por 48h+, cualquiera puede escribir
+
+### 10.3 Story First-Day Behavior
+
+Después de que ambos completan onboarding:
+- `/story` muestra ambos prólogos como "historia previa" (read-only)
+- Debajo: "Tu turno de escribir" con campo de texto
+- El primer turno diario es del primer jugador que completó onboarding (por `createdAt`)
+- Prólogos siempre visibles en story archive como primeras entradas
+
+### 10.4 Offline Support (Service Worker)
+
+Agregar cache strategy al `public/sw.js`:
+
+```javascript
+// Cache app shell on install
+const CACHE_NAME = 'hq-v1';
+const SHELL = ['/', '/rituals', '/story', '/pact', '/profile'];
+
+self.addEventListener('install', (e) => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(SHELL)));
+});
+
+self.addEventListener('fetch', (e) => {
+  // Network-first for API, cache-first for pages
+  if (e.request.url.includes('/api/')) return; // skip API caching
+  e.respondWith(
+    fetch(e.request).catch(() => caches.match(e.request))
+  );
+});
+```
+
+Limitación: datos offline son stale. Marking rituals offline NO se soporta en MVP — mostrar "Sin conexión" si fetch falla.
+
+### 10.5 React 19 Form Pattern
+
+Estandarizar en todos los forms:
+- **Server actions con `useActionState`** para forms simples (pact, character)
+- **Manual state + fetch** para flujos complejos (story generation, ritual list)
+- **Controlled inputs** siempre (no uncontrolled con FormData)
+
+Esto ya está parcialmente implementado. Documentar como convención para consistencia.
+
+### 10.6 Quick Wins (low effort, high engagement)
+
+| Win | Dónde | Effort |
+|-----|-------|--------|
+| HP 0 = pantalla especial con texto narrativo | home o modal | 2h |
+| "Story updated 2h ago by [name]" en home | home-screen | 30min |
+| Weekly ritual completion % en home | home-screen | 1h |
+| Streak badge prominente en ritual card | rituals-list | 30min |
