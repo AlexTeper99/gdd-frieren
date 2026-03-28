@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Quest — Full Flow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:#06060c;color:#e8e4df;font-family:'Plus Jakarta Sans',sans-serif;min-height:100vh;display:flex;flex-direction:column;align-items:center;}
+
+  /* Map bar */
+  .map{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,6,12,0.95);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,0.04);padding:8px 12px;display:flex;gap:4px;flex-wrap:wrap;justify-content:center;}
+  .map-btn{padding:3px 7px;font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(255,255,255,0.15);cursor:pointer;border-radius:3px;border:1px solid rgba(255,255,255,0.03);transition:all 0.15s;white-space:nowrap;}
+  .map-btn:hover{color:rgba(255,255,255,0.3);background:rgba(255,255,255,0.02);}
+  .map-btn.on{color:rgba(170,130,255,0.5);border-color:rgba(170,130,255,0.15);background:rgba(170,130,255,0.04);}
+  .map-sep{color:rgba(255,255,255,0.06);font-size:0.5rem;display:flex;align-items:center;}
+
+  .phone{width:375px;height:812px;background:#0a0a14;border-radius:40px;border:2px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;margin:52px auto 1rem;box-shadow:0 20px 60px rgba(0,0,0,0.5);}
+  .phone-n{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:30px;background:#06060c;border-radius:0 0 20px 20px;z-index:50;}
+  .phone-h{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);width:134px;height:5px;background:rgba(255,255,255,0.15);border-radius:3px;z-index:50;}
+
+  .scr{position:absolute;inset:0;padding:55px 24px 40px;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 0.35s,transform 0.35s;transform:translateX(20px);overflow-y:auto;}
+  .scr.on{opacity:1;pointer-events:auto;transform:translateX(0);}
+  .scr::-webkit-scrollbar{display:none;}
+  .bg{position:absolute;inset:0;z-index:-1;}
+
+  /* Common */
+  h2{font-family:'Instrument Serif',serif;font-size:1.4rem;font-weight:400;color:#f0ece6;margin-bottom:0.4rem;}
+  .sub{font-size:0.72rem;color:rgba(255,255,255,0.25);line-height:1.5;margin-bottom:1.2rem;}
+  .nar{font-family:'Instrument Serif',serif;font-size:0.9rem;color:rgba(220,215,235,0.65);font-style:italic;line-height:1.65;}
+  .lbl{font-family:'DM Mono',monospace;font-size:0.45rem;text-transform:uppercase;letter-spacing:0.12em;color:rgba(255,255,255,0.12);margin-bottom:0.5rem;}
+  .where{display:inline-block;padding:3px 8px;border-radius:4px;font-family:'DM Mono',monospace;font-size:0.42rem;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:0.75rem;}
+  .w-on{background:rgba(255,140,80,0.06);color:rgba(255,140,80,0.35);border:1px solid rgba(255,140,80,0.06);}
+  .w-cr{background:rgba(220,200,170,0.06);color:rgba(220,200,170,0.35);border:1px solid rgba(220,200,170,0.06);}
+  .w-fr{background:rgba(170,130,255,0.06);color:rgba(170,130,255,0.35);border:1px solid rgba(170,130,255,0.06);}
+  .w-pa{background:rgba(210,195,170,0.06);color:rgba(210,195,170,0.35);border:1px solid rgba(210,195,170,0.06);}
+  .w-ch{background:rgba(100,140,255,0.06);color:rgba(100,140,255,0.35);border:1px solid rgba(100,140,255,0.06);}
+
+  .btn{width:100%;padding:13px;border-radius:12px;font-family:'Instrument Serif',serif;font-size:0.85rem;font-style:italic;cursor:pointer;text-align:center;transition:all 0.2s;flex-shrink:0;}
+  .btn-p{background:rgba(170,130,255,0.08);border:1px solid rgba(170,130,255,0.12);color:rgba(200,180,255,0.6);}
+  .btn-p:hover{background:rgba(170,130,255,0.15);}
+  .btn-s{background:transparent;border:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.2);font-size:0.75rem;font-style:normal;font-family:'Plus Jakarta Sans',sans-serif;margin-top:8px;}
+  .btn-w{background:rgba(210,195,170,0.06);border:1px solid rgba(210,195,170,0.1);color:rgba(210,195,170,0.5);}
+  .btn-e{background:rgba(233,69,96,0.06);border:1px solid rgba(233,69,96,0.1);color:rgba(233,120,140,0.5);}
+
+  .nav-strip{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-shrink:0;}
+  .nav-back{font-size:0.75rem;color:rgba(255,255,255,0.2);cursor:pointer;}
+  .nav-step{font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.1);text-transform:uppercase;letter-spacing:0.12em;}
+
+  /* Progress dots */
+  .dots{display:flex;gap:5px;justify-content:center;margin-bottom:1.25rem;flex-shrink:0;}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.06);}
+  .dot.on{background:rgba(170,130,255,0.5);width:20px;border-radius:4px;}
+  .dot.dn{background:rgba(170,130,255,0.2);}
+
+  /* Inputs */
+  .inp{width:100%;padding:12px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:11px;color:#e8e4df;font-family:'Plus Jakarta Sans',sans-serif;font-size:0.85rem;outline:none;}
+  .inp::placeholder{color:rgba(255,255,255,0.15);}
+  .inp:focus{border-color:rgba(170,130,255,0.25);}
+  textarea.inp{min-height:70px;resize:none;line-height:1.5;}
+
+  /* Archetype grid */
+  .ag{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem;}
+  .ac{padding:14px 10px;background:rgba(255,255,255,0.02);border:1.5px solid rgba(255,255,255,0.05);border-radius:12px;text-align:center;cursor:pointer;transition:all 0.2s;}
+  .ac:hover{background:rgba(255,255,255,0.04);}
+  .ac.sel{border-color:var(--c);background:var(--bg);}
+  .ac-i{font-size:1.6rem;margin-bottom:5px;}
+  .ac-n{font-size:0.75rem;font-weight:600;margin-bottom:2px;}
+  .ac-d{font-size:0.58rem;color:rgba(255,255,255,0.25);line-height:1.4;}
+
+  /* Objective chips */
+  .oc{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:1rem;}
+  .och{padding:7px 12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:100px;font-size:0.7rem;cursor:pointer;color:rgba(255,255,255,0.35);}
+  .och.sel{border-color:rgba(170,130,255,0.25);background:rgba(170,130,255,0.05);color:#c8b4ff;}
+
+  /* Ritual cards */
+  .rc{display:flex;align-items:flex-start;gap:8px;padding:11px;background:rgba(255,255,255,0.02);border:1.5px solid rgba(255,255,255,0.04);border-radius:10px;cursor:pointer;margin-bottom:5px;font-size:0.72rem;color:rgba(255,255,255,0.25);transition:all 0.2s;}
+  .rc:hover{background:rgba(255,255,255,0.03);}
+  .rc.sel{border-color:rgba(170,130,255,0.2);background:rgba(170,130,255,0.03);color:rgba(170,130,255,0.5);}
+  .rc-ck{width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(255,255,255,0.07);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;}
+  .rc.sel .rc-ck{border-color:rgba(170,130,255,0.3);background:rgba(170,130,255,0.1);color:rgba(170,130,255,0.6);}
+  .rc-info{flex:1;}
+  .rc-n{font-weight:600;font-size:0.72rem;margin-bottom:1px;}
+  .rc-m{font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(255,255,255,0.12);}
+  .rc.done{border-color:rgba(106,255,106,0.1);color:rgba(106,255,106,0.4);}
+  .rc.done .rc-ck{border-color:rgba(106,255,106,0.2);background:rgba(106,255,106,0.06);color:rgba(106,255,106,0.5);}
+
+  /* Invite */
+  .inv{display:flex;align-items:center;gap:12px;padding:14px;background:rgba(255,255,255,0.02);border:1.5px solid rgba(255,255,255,0.05);border-radius:12px;cursor:pointer;margin-bottom:8px;}
+  .inv.sel{border-color:rgba(170,130,255,0.2);background:rgba(170,130,255,0.03);}
+  .inv-i{font-size:1.2rem;}
+  .inv h3{font-size:0.78rem;font-weight:600;margin-bottom:1px;}
+  .inv p{font-size:0.6rem;color:rgba(255,255,255,0.2);line-height:1.4;}
+
+  /* Loading */
+  .ld{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;}
+  .ld-ring{width:45px;height:45px;border:2px solid rgba(170,130,255,0.08);border-top-color:rgba(170,130,255,0.4);border-radius:50%;animation:sp 1.5s linear infinite;margin-bottom:1.2rem;}
+  @keyframes sp{to{transform:rotate(360deg)}}
+  .ld-s{font-family:'DM Mono',monospace;font-size:0.55rem;color:rgba(255,255,255,0.1);margin-top:0.5rem;}
+
+  /* === CAMPSITE === */
+  .camp{position:absolute;inset:0;}
+  .sky{position:absolute;inset:0;background:radial-gradient(ellipse 70% 45% at 60% 10%,rgba(45,28,75,0.55),transparent 50%),radial-gradient(ellipse 50% 35% at 25% 15%,rgba(18,32,85,0.45),transparent 40%),linear-gradient(180deg,#050518 0%,#0a0a25 15%,#101038 32%,#141442 48%,#131835 62%,#0f1a20 78%,#0c160c 100%);}
+  .st{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d) ease-in-out infinite alternate;}
+  @keyframes tw{0%{opacity:var(--a)}100%{opacity:var(--b)}}
+  .mn{position:absolute;top:6%;right:12%;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 32% 32%,#f0e8d8,#c8c0b0);box-shadow:0 0 25px rgba(240,232,216,0.07);}
+  .mts{position:absolute;bottom:52%;left:-10%;right:-10%;height:22%;}.mt{position:absolute;bottom:0;clip-path:polygon(0% 100%,50% 0%,100% 100%);opacity:0.12;background:#0a0f1a;}
+  .tms{position:absolute;bottom:42%;left:-5%;right:-5%;height:14%;display:flex;align-items:flex-end;justify-content:space-around;opacity:0.18;}.tm{clip-path:polygon(50% 0%,18% 68%,4% 100%,96% 100%,82% 68%);background:#060c06;flex-shrink:0;}
+  .gd{position:absolute;bottom:0;left:0;right:0;height:52%;background:linear-gradient(180deg,transparent,rgba(14,24,14,0.45) 15%,rgba(12,20,12,0.7) 35%,rgba(10,18,10,0.9) 60%,#0a130a);}
+  .cl{position:absolute;bottom:15%;left:50%;transform:translateX(-50%);width:220px;height:180px;border-radius:50%;background:radial-gradient(ellipse,rgba(35,28,20,0.4),transparent 65%);}
+  .tns{position:absolute;bottom:35%;left:-8%;right:-8%;height:20%;display:flex;align-items:flex-end;justify-content:space-between;opacity:0.14;pointer-events:none;}.tn{clip-path:polygon(50% 0%,15% 65%,2% 100%,98% 100%,85% 65%);background:#050a05;flex-shrink:0;}
+  .ff{position:absolute;border-radius:50%;background:radial-gradient(circle,rgba(255,255,175,0.7),transparent 70%);animation:ffm var(--d) ease-in-out infinite;animation-delay:var(--dl);z-index:4;width:3px;height:3px;}
+  @keyframes ffm{0%{transform:translate(0,0);opacity:0.1}33%{transform:translate(var(--x1),var(--y1));opacity:0.55}66%{transform:translate(var(--x2),var(--y2));opacity:0.15}100%{transform:translate(0,0);opacity:0.1}}
+  .vig{position:absolute;inset:0;background:radial-gradient(ellipse 55% 48% at 50% 55%,transparent 20%,rgba(5,5,12,0.8) 100%);pointer-events:none;z-index:5;}
+  .grn{position:absolute;inset:0;opacity:0.02;pointer-events:none;z-index:6;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:128px;}
+
+  /* Camp objects */
+  .ob{position:absolute;display:flex;flex-direction:column;align-items:center;cursor:pointer;z-index:10;transition:transform 0.3s cubic-bezier(0.16,1,0.3,1);}
+  .ob:hover{transform:scale(1.12) translateY(-3px);}
+  .ob-l{font-family:'DM Mono',monospace;font-size:0.48rem;text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;text-shadow:0 2px 8px #000;opacity:0;transition:opacity 0.3s;}
+  .ob:hover .ob-l{opacity:0.55;}
+
+  /* Fogata */
+  .fo{bottom:20%;left:50%;transform:translateX(-50%);z-index:12;}
+  .fo:hover{transform:translateX(-50%) scale(1.1) translateY(-3px);}
+  .fo-gl{position:absolute;top:40%;left:50%;transform:translate(-50%,-50%);width:180px;height:180px;border-radius:50%;background:radial-gradient(circle,rgba(255,110,35,0.13),transparent 60%);animation:fg 3s ease-in-out infinite alternate;pointer-events:none;}
+  @keyframes fg{0%{transform:translate(-50%,-50%) scale(1)}100%{transform:translate(-50%,-50%) scale(1.1)}}
+  .fo-f{position:relative;width:42px;height:48px;margin-bottom:-4px;}
+  .flo{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:34px;height:44px;background:radial-gradient(ellipse at 50% 80%,rgba(255,135,45,0.6),rgba(255,55,8,0.25) 50%,transparent 72%);border-radius:50% 50% 30% 30%;filter:blur(3px);animation:fl 1.8s ease-in-out infinite alternate;}
+  @keyframes fl{0%{transform:translateX(-50%) scaleY(1)}50%{transform:translateX(-48%) scaleY(1.05) scaleX(0.93)}100%{transform:translateX(-52%) scaleY(0.96) scaleX(1.04)}}
+  .fli{position:absolute;bottom:4px;left:50%;transform:translateX(-50%);width:16px;height:26px;background:radial-gradient(ellipse at 50% 80%,rgba(255,255,195,0.75),transparent 72%);border-radius:50%;filter:blur(1.5px);animation:fl 1.1s ease-in-out infinite alternate-reverse;}
+  .fo-logs{display:flex;gap:2px;justify-content:center;}.fl-lg{height:5px;border-radius:3px;background:linear-gradient(90deg,#3a2515,#5a3820,#3a2515);}
+  .fo-st{display:flex;gap:2px;justify-content:center;margin-top:1px;}.fss{width:8px;height:6px;border-radius:40% 50%;background:#2a2a32;box-shadow:0 1px 2px rgba(0,0,0,0.4);}
+
+  /* Character */
+  .ch{top:36%;left:14%;z-index:11;}
+  .ch-cl{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:24px;height:36px;background:linear-gradient(180deg,rgba(100,140,255,0.18),rgba(60,80,180,0.1));border-radius:7px 7px 3px 3px;border:1px solid rgba(100,140,255,0.08);}
+  .ch-hd{position:absolute;top:5px;left:50%;transform:translateX(-50%);width:12px;height:12px;background:radial-gradient(circle at 38% 38%,rgba(225,225,240,0.28),rgba(185,180,205,0.12));border-radius:50%;}
+  .ch-hr{position:absolute;top:2px;left:50%;transform:translateX(-50%);width:16px;height:16px;background:linear-gradient(180deg,rgba(80,60,40,0.25),rgba(60,45,30,0.1));border-radius:8px 8px 2px 2px;z-index:-1;}
+  .ch-sf{position:absolute;top:0;right:-5px;width:2px;height:50px;background:rgba(140,120,100,0.2);border-radius:1px;}
+  .ch-or{position:absolute;top:-4px;right:-8px;width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,rgba(100,140,255,0.35),rgba(60,80,180,0.1));box-shadow:0 0 8px rgba(100,140,255,0.15);animation:orb 3s ease-in-out infinite alternate;}
+  @keyframes orb{0%{box-shadow:0 0 6px rgba(100,140,255,0.12)}100%{box-shadow:0 0 12px rgba(100,140,255,0.25)}}
+
+  /* Crónicas */
+  .cr{top:36%;right:14%;}
+  .cr-bk{width:34px;height:42px;background:linear-gradient(160deg,rgba(220,200,170,0.14),rgba(190,170,140,0.08));border-radius:2px 4px 4px 2px;border:1px solid rgba(220,200,170,0.08);box-shadow:0 3px 10px rgba(0,0,0,0.3);position:relative;}
+  .cr-bk::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:rgba(140,120,90,0.15);border-radius:2px 0 0 2px;}
+  .cr-bk-t{position:absolute;top:50%;left:55%;transform:translate(-50%,-50%);font-family:'Instrument Serif',serif;font-size:0.35rem;color:rgba(220,200,170,0.3);text-align:center;width:24px;}
+
+  /* Pacto */
+  .pa{bottom:34%;left:12%;}
+  .pa-b{width:14px;height:42px;background:linear-gradient(90deg,rgba(210,195,170,0.08),rgba(230,215,190,0.12),rgba(210,195,170,0.08));border:1px solid rgba(210,195,170,0.06);border-radius:7px 7px 3px 3px;position:relative;box-shadow:0 3px 8px rgba(0,0,0,0.3);}
+  .pa-w{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);width:8px;height:8px;border-radius:50%;background:radial-gradient(circle,#8b2020,#5a1010);box-shadow:0 0 4px rgba(139,32,32,0.3);}
+
+  /* Frieren */
+  .fri{bottom:25%;left:32%;z-index:11;opacity:0.3;pointer-events:none;transition:opacity 0.8s;}
+  .fri.here{opacity:1;pointer-events:auto;cursor:pointer;}
+  .fri.here:hover{transform:scale(1.08) translateY(-2px);}
+  .fri-hr{position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:14px;height:16px;background:linear-gradient(180deg,rgba(210,215,225,0.22),rgba(190,195,205,0.08));border-radius:7px 7px 2px 2px;z-index:-1;}
+  .fri-hd{width:10px;height:10px;background:radial-gradient(circle at 38% 38%,rgba(225,225,240,0.28),rgba(185,180,205,0.12));border-radius:50%;margin:0 auto;}
+  .fri-bd{width:12px;height:18px;background:linear-gradient(180deg,rgba(205,205,225,0.18),rgba(165,155,195,0.08));border-radius:3px 3px 2px 2px;margin:1px auto 0;}
+  .fri-nt{position:absolute;top:-7px;right:-7px;width:8px;height:8px;border-radius:50%;background:rgba(170,130,255,0.65);box-shadow:0 0 7px rgba(170,130,255,0.35);display:none;animation:pls 2s ease-in-out infinite;}
+  .fri.here .fri-nt{display:block;}
+  @keyframes pls{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.3);opacity:0.5}}
+
+  /* Hamburger */
+  .hb{position:absolute;top:48px;left:18px;z-index:30;width:30px;height:30px;display:flex;flex-direction:column;justify-content:center;gap:3.5px;cursor:pointer;padding:6px;border-radius:7px;background:rgba(6,6,12,0.35);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,0.02);}
+  .hb span{display:block;width:100%;height:1.5px;background:rgba(255,255,255,0.22);border-radius:1px;}
+
+  /* Camp overlay tap */
+  .ct{position:absolute;inset:0;z-index:40;background:rgba(6,6,12,0.92);backdrop-filter:blur(12px);display:none;flex-direction:column;padding:24px 20px 38px;border-radius:38px;overflow-y:auto;}
+  .ct.show{display:flex;}.ct::-webkit-scrollbar{display:none;}
+  .ct-x{position:sticky;top:0;align-self:flex-end;font-size:0.65rem;color:rgba(255,255,255,0.18);cursor:pointer;padding:4px 9px;border-radius:5px;border:1px solid rgba(255,255,255,0.03);background:rgba(6,6,12,0.8);z-index:5;margin-bottom:6px;flex-shrink:0;}
+
+  /* Pact questions */
+  .pq{margin-bottom:0.75rem;}
+  .pq-l{font-family:'DM Mono',monospace;font-size:0.42rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(210,195,170,0.2);margin-bottom:3px;}
+  .pq-i{width:100%;padding:10px;background:rgba(210,195,170,0.03);border:1px solid rgba(210,195,170,0.05);border-radius:8px;font-size:0.72rem;color:rgba(255,255,255,0.4);outline:none;resize:none;min-height:50px;font-family:'Plus Jakarta Sans',sans-serif;}
+  .pq-i::placeholder{color:rgba(255,255,255,0.08);}
+
+  /* Crónicas paper */
+  .crp{background:rgba(240,232,210,0.04);border:1px solid rgba(220,200,170,0.05);border-radius:4px;padding:16px 12px;margin-bottom:10px;}
+  .crp-h{text-align:center;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(220,200,170,0.04);}
+  .crp-m{font-family:'Instrument Serif',serif;font-size:1.15rem;color:rgba(220,200,170,0.35);}
+  .crp-s{font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(220,200,170,0.14);text-transform:uppercase;letter-spacing:0.12em;margin-top:2px;}
+  .crp-a{margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(220,200,170,0.03);}
+  .crp-a:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+  .crp-d{font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(220,200,170,0.16);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:2px;}
+  .crp-t{font-family:'Instrument Serif',serif;font-size:0.78rem;color:rgba(220,200,170,0.35);margin-bottom:2px;}
+  .crp-tx{font-size:0.62rem;color:rgba(255,255,255,0.16);line-height:1.5;font-style:italic;}
+  .crp-img{width:100%;height:65px;background:rgba(220,200,170,0.03);border:1px solid rgba(220,200,170,0.03);border-radius:3px;margin-bottom:5px;display:flex;align-items:center;justify-content:center;font-size:0.4rem;color:rgba(220,200,170,0.08);font-family:'DM Mono',monospace;}
+
+  .crp-cur{background:rgba(170,130,255,0.03);border:1px solid rgba(170,130,255,0.07);border-radius:7px;padding:10px 12px;margin-bottom:8px;flex-shrink:0;}
+  .crp-cur-l{font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(170,130,255,0.25);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:4px;}
+  .crp-cur-t{font-family:'Instrument Serif',serif;font-size:0.78rem;color:rgba(220,215,235,0.5);line-height:1.5;font-style:italic;}
+
+  /* Character sheet */
+  .sh{margin-bottom:1rem;}
+  .sh-l{font-family:'DM Mono',monospace;font-size:0.42rem;text-transform:uppercase;letter-spacing:0.1em;color:rgba(255,255,255,0.08);margin-bottom:5px;}
+  .sh-id{font-family:'Instrument Serif',serif;font-size:0.82rem;color:rgba(220,215,235,0.4);font-style:italic;line-height:1.5;}
+
+  /* Result */
+  .res{padding:14px;border-radius:10px;margin:0.75rem 0;}
+  .res-g{background:rgba(106,255,106,0.03);border:1px solid rgba(106,255,106,0.05);}
+  .res-m{background:rgba(255,200,80,0.03);border:1px solid rgba(255,200,80,0.05);}
+  .res-b{background:rgba(255,106,106,0.03);border:1px solid rgba(255,106,106,0.05);}
+
+  /* Progress bar (sunday) */
+  .spg{display:flex;gap:3px;margin-bottom:1.2rem;flex-shrink:0;}
+  .spg-s{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,0.03);}
+  .spg-s.dn{background:rgba(170,130,255,0.25);}
+  .spg-s.on{background:rgba(170,130,255,0.45);}
+
+  /* Seal */
+  .seal{display:inline-block;width:50px;height:50px;border-radius:50%;background:radial-gradient(circle,#8b2020,#5a1010);box-shadow:0 0 15px rgba(139,32,32,0.25);cursor:pointer;transition:all 0.3s;}
+  .seal:hover{transform:scale(1.1);}
+
+  /* Calendar mini */
+  .cal{display:flex;gap:2px;margin-top:4px;}
+  .cd{width:12px;height:12px;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:0.35rem;}
+  .cd-ok{background:rgba(106,255,106,0.06);border:1px solid rgba(106,255,106,0.1);color:rgba(106,255,106,0.3);}
+  .cd-x{background:rgba(255,106,106,0.05);border:1px solid rgba(255,106,106,0.06);color:rgba(255,106,106,0.2);}
+  .cd-t{background:rgba(100,140,255,0.06);border:1px solid rgba(100,140,255,0.12);color:rgba(100,140,255,0.35);}
+
+  .stats-r{width:65px;height:65px;border-radius:50%;border:2px solid rgba(100,140,255,0.08);display:flex;align-items:center;justify-content:center;margin:0 auto 0.75rem;}
+  .stats-p{font-family:'Instrument Serif',serif;font-size:1.8rem;color:rgba(100,140,255,0.38);}
+  .stats-pl{font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(100,140,255,0.2);text-transform:uppercase;letter-spacing:0.1em;}
+  .sr{display:flex;gap:14px;justify-content:center;margin-bottom:0.5rem;}
+  .si{text-align:center;}.sv{font-size:0.9rem;font-weight:600;}.sl{font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(255,255,255,0.14);}
+</style>
+</head>
+<body>
+
+<!-- NAV MAP -->
+<div class="map" id="map">
+  <div class="map-btn on" onclick="go('ob-0')">Llegada</div>
+  <div class="map-btn" onclick="go('ob-1')">Identidad</div>
+  <div class="map-btn" onclick="go('ob-2')">Arquetipo</div>
+  <div class="map-btn" onclick="go('ob-3')">Misión</div>
+  <div class="map-btn" onclick="go('ob-4')">Invitar</div>
+  <div class="map-btn" onclick="go('ob-5')">Loading</div>
+  <div class="map-btn" onclick="go('ob-6')">Prólogo</div>
+  <div class="map-sep">|</div>
+  <div class="map-btn" onclick="go('camp')">Campamento</div>
+  <div class="map-sep">|</div>
+  <div class="map-btn" onclick="go('d-turn')">Tu turno</div>
+  <div class="map-btn" onclick="go('d-noturn')">No turno</div>
+  <div class="map-sep">|</div>
+  <div class="map-btn" onclick="go('sun-0')">Domingo</div>
+</div>
+
+<div class="phone">
+  <div class="phone-n"></div>
+  <div class="phone-h"></div>
+
+  <!-- ==================== ONBOARDING ==================== -->
+
+  <!-- OB-0: La llegada -->
+  <div class="scr on" id="ob-0">
+    <div class="bg" style="background:#000;"></div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:1.5rem;">
+      <div class="nar" style="max-width:260px;color:rgba(220,215,235,0.55);">"Toda historia empieza con una decisión."</div>
+      <div class="nar" style="max-width:260px;font-size:0.8rem;color:rgba(220,215,235,0.3);">"Y toda decisión, sostenida en el tiempo, construye a quién sos."</div>
+    </div>
+    <button class="btn btn-p" onclick="go('ob-1')">Continuar</button>
+  </div>
+
+  <!-- OB-1: Identidad + nombre -->
+  <div class="scr" id="ob-1">
+    <div class="bg" style="background:linear-gradient(180deg,#08081a,#121230 50%,#0f1a0f);"></div>
+    <div class="nav-strip"><span class="nav-back" onclick="go('ob-0')">← Atrás</span><span class="nav-step">1 de 6</span></div>
+    <div class="dots"><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <h2>Tu identidad</h2>
+    <div class="sub">Primero decidís quién querés ser. El hábito es la evidencia.</div>
+    <div class="lbl">Quién querés ser al final de este año</div>
+    <textarea class="inp" placeholder="Ej: Alguien que cuida cómo vive..." style="margin-bottom:1rem;">Soy alguien que cuida lo que come y cómo se mueve.</textarea>
+    <div class="lbl">Tu personaje</div>
+    <input class="inp" placeholder="No tiene que ser tu nombre real." value="Kael" />
+    <div style="flex:1;min-height:1rem;"></div>
+    <button class="btn btn-p" onclick="go('ob-2')">Continuar</button>
+  </div>
+
+  <!-- OB-2: Arquetipo -->
+  <div class="scr" id="ob-2">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 30%,rgba(83,52,131,0.1),transparent 60%),linear-gradient(180deg,#0a0a14,#14102a 50%,#0a0a14);"></div>
+    <div class="nav-strip"><span class="nav-back" onclick="go('ob-1')">← Atrás</span><span class="nav-step">2 de 6</span></div>
+    <div class="dots"><div class="dot dn"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="nar" style="font-size:0.82rem;margin-bottom:1rem;">"Todo aventurero tiene una esencia."</div>
+    <h2>Tu arquetipo</h2>
+    <div class="sub">Define tu esencia narrativa y rituales sugeridos. Solo estético.</div>
+    <div class="ag">
+      <div class="ac" style="--c:rgba(255,80,80,0.35);--bg:rgba(255,80,80,0.03);" onclick="sA(this)"><div class="ac-i">⚔️</div><div class="ac-n">Guerrero</div><div class="ac-d">Construís con el cuerpo. Disciplina física.</div></div>
+      <div class="ac sel" style="--c:rgba(100,140,255,0.35);--bg:rgba(100,140,255,0.03);"><div class="ac-i">🧙</div><div class="ac-n">Mago</div><div class="ac-d">Construís con la mente. Disciplina mental.</div></div>
+      <div class="ac" style="--c:rgba(80,200,120,0.35);--bg:rgba(80,200,120,0.03);" onclick="sA(this)"><div class="ac-i">🏹</div><div class="ac-n">Ranger</div><div class="ac-d">Construís en movimiento. Adaptación.</div></div>
+      <div class="ac" style="--c:rgba(160,200,140,0.35);--bg:rgba(160,200,140,0.03);" onclick="sA(this)"><div class="ac-i">🌿</div><div class="ac-n">Curandero</div><div class="ac-d">Construís desde adentro. Cuidado.</div></div>
+    </div>
+    <div style="flex:1;"></div>
+    <button class="btn btn-p" onclick="go('ob-3')">Continuar</button>
+  </div>
+
+  <!-- OB-3: Misión + Rituales -->
+  <div class="scr" id="ob-3">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 30%,rgba(83,52,131,0.1),transparent 60%),linear-gradient(180deg,#0a0a14,#14102a 50%,#0a0a14);"></div>
+    <div class="nav-strip"><span class="nav-back" onclick="go('ob-2')">← Atrás</span><span class="nav-step">3 de 6</span></div>
+    <div class="dots"><div class="dot dn"></div><div class="dot dn"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <h2>Misión del arco</h2>
+    <div class="sub">UN área de foco este mes. Todas tus rituales apuntan acá.</div>
+    <div class="lbl">Sugeridas para Mago</div>
+    <div class="oc">
+      <div class="och sel" onclick="sC(this)">😴 Sueño</div>
+      <div class="och" onclick="sC(this)">💧 Hidratación</div>
+      <div class="och" onclick="sC(this)">🍳 Alimentación</div>
+      <div class="och" onclick="sC(this)">✏️ Otro...</div>
+    </div>
+    <h2 style="font-size:1.1rem;">Rituales</h2>
+    <div class="sub" style="margin-bottom:0.5rem;">Hasta 3, con hora y lugar. Pre-llenados para <strong style="color:rgba(170,130,255,0.5);">Sueño</strong>.</div>
+    <div style="flex:1;overflow-y:auto;">
+      <div class="rc sel" onclick="this.classList.toggle('sel')"><div class="rc-ck">✓</div><div class="rc-info"><div class="rc-n">🌙 Acostarme antes de las 23h</div><div class="rc-m">22:45 · Mi habitación · Si no puedo: pantallas off 23h</div></div></div>
+      <div class="rc sel" onclick="this.classList.toggle('sel')"><div class="rc-ck">✓</div><div class="rc-info"><div class="rc-n">📵 Sin pantallas 1h antes</div><div class="rc-m">22:00 · Living · Si no puedo: 30 min mínimo</div></div></div>
+      <div class="rc" onclick="this.classList.toggle('sel')"><div class="rc-ck"></div><div class="rc-info"><div class="rc-n">☕ Sin cafeína después de 14h</div><div class="rc-m">14:00 · Oficina · Si no puedo: descaf</div></div></div>
+      <div class="rc" onclick="this.classList.toggle('sel')"><div class="rc-ck"></div><div class="rc-info"><div class="rc-n">📖 Leer antes de dormir</div><div class="rc-m">22:30 · Cama · Si no puedo: 10 min mínimo</div></div></div>
+      <div style="padding:8px;border:1.5px dashed rgba(255,255,255,0.03);border-radius:8px;color:rgba(255,255,255,0.1);font-size:0.65rem;text-align:center;cursor:pointer;margin-top:3px;">+ Ritual personalizado</div>
+    </div>
+    <button class="btn btn-p" onclick="go('ob-4')">Continuar</button>
+  </div>
+
+  <!-- OB-4: Invitar -->
+  <div class="scr" id="ob-4">
+    <div class="bg" style="background:linear-gradient(180deg,#08081a,#121230 50%,#0f1a0f);"></div>
+    <div class="nav-strip"><span class="nav-back" onclick="go('ob-3')">← Atrás</span><span class="nav-step">4 de 6</span></div>
+    <div class="dots"><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="nar" style="font-size:0.82rem;margin-bottom:1rem;">"Los viajes largos se hacen mejor acompañado."</div>
+    <h2>Tu compañero de viaje</h2>
+    <div class="sub">Habit Quest se juega de a dos.</div>
+    <div class="inv sel" onclick="sI(this)"><div class="inv-i">👥</div><div><h3>Invitar a alguien</h3><p>Le llega un link mágico. Hace su propio onboarding.</p></div></div>
+    <div class="inv" onclick="sI(this)"><div class="inv-i">🗡️</div><div><h3>Viajar solo</h3><p>Tu viaje, tu ritmo. Podés invitar después.</p></div></div>
+    <div style="flex:1;"></div>
+    <button class="btn btn-p" onclick="go('ob-5')">Continuar</button>
+  </div>
+
+  <!-- OB-5: Loading -->
+  <div class="scr" id="ob-5">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 30%,rgba(83,52,131,0.1),transparent 60%),linear-gradient(180deg,#0a0a14,#14102a 50%,#0a0a14);"></div>
+    <div class="dots" style="margin-top:1rem;"><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot on"></div><div class="dot"></div></div>
+    <div class="ld">
+      <div class="ld-ring"></div>
+      <h2 style="font-size:1.1rem;">Generando tu mundo...</h2>
+      <div class="ld-s">Nombrando el reino... escribiendo el primer capítulo...</div>
+    </div>
+    <button class="btn btn-p" onclick="go('ob-6')">Continuar</button>
+  </div>
+
+  <!-- OB-6: Prólogo -->
+  <div class="scr" id="ob-6">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 60%,rgba(255,120,40,0.05),transparent 50%),linear-gradient(180deg,#0a0a14,#1a1020 50%,#0a0a14);"></div>
+    <div class="nav-strip"><span></span><span class="nav-step">6 de 6</span></div>
+    <div class="dots"><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot dn"></div><div class="dot on"></div></div>
+    <div style="flex:1;display:flex;align-items:center;">
+      <div class="nar">"Kael despertó junto a una fogata que no recordaba haber encendido. Una maga de pelo plateado leía en silencio.<br><br>— No sé por qué apareciste acá — dijo sin levantar la vista — pero tengo la impresión de que vas a quedarte un tiempo.<br><br>El reino de Valdris se extendía más allá de las montañas. Había algo que invitaba a quedarse. A ser constante. Como si cada noche bien dormida construyera un centímetro más de camino."</div>
+    </div>
+    <button class="btn btn-p" onclick="go('camp')">Comenzar el viaje</button>
+  </div>
+
+  <!-- ==================== CAMPAMENTO ==================== -->
+  <div class="scr" id="camp" style="padding:0;">
+    <div class="camp">
+      <div class="sky"></div>
+      <div class="st" style="top:4%;left:8%;width:2px;height:2px;--d:3s;--a:0.1;--b:0.5;"></div>
+      <div class="st" style="top:7%;left:25%;width:1.5px;height:1.5px;--d:4.5s;--a:0.07;--b:0.38;"></div>
+      <div class="st" style="top:2%;left:45%;width:2.5px;height:2.5px;--d:2.6s;--a:0.12;--b:0.6;"></div>
+      <div class="st" style="top:10%;left:62%;width:1.5px;height:1.5px;--d:3.8s;--a:0.08;--b:0.42;"></div>
+      <div class="st" style="top:5%;left:78%;width:2px;height:2px;--d:5s;--a:0.08;--b:0.45;"></div>
+      <div class="st" style="top:13%;left:18%;width:1px;height:1px;--d:4s;--a:0.06;--b:0.3;"></div>
+      <div class="st" style="top:11%;left:55%;width:1.5px;height:1.5px;--d:3.5s;--a:0.1;--b:0.48;"></div>
+      <div class="mn"></div>
+      <div class="mts"><div class="mt" style="left:0;width:40%;height:100%;"></div><div class="mt" style="left:25%;width:50%;height:85%;"></div><div class="mt" style="left:55%;width:45%;height:95%;"></div></div>
+      <div class="tms"><div class="tm" style="width:35px;height:55px;"></div><div class="tm" style="width:48px;height:80px;"></div><div class="tm" style="width:30px;height:48px;"></div><div class="tm" style="width:55px;height:90px;"></div><div class="tm" style="width:38px;height:62px;"></div><div class="tm" style="width:45px;height:75px;"></div></div>
+      <div class="gd"></div><div class="cl"></div>
+      <div class="tns"><div class="tn" style="width:65px;height:110px;margin-left:-12px;"></div><div style="flex:1;"></div><div class="tn" style="width:55px;height:95px;margin-right:-8px;"></div></div>
+      <div class="ff" style="top:30%;left:15%;--d:9s;--dl:0s;--x1:12px;--y1:-16px;--x2:-8px;--y2:8px;"></div>
+      <div class="ff" style="top:38%;left:72%;--d:11s;--dl:2s;--x1:-14px;--y1:-8px;--x2:10px;--y2:12px;"></div>
+      <div class="ff" style="top:46%;left:32%;--d:8s;--dl:1s;--x1:8px;--y1:-18px;--x2:-12px;--y2:6px;"></div>
+      <div class="ff" style="top:34%;right:20%;--d:7s;--dl:0.5s;--x1:-8px;--y1:6px;--x2:10px;--y2:-12px;"></div>
+
+      <!-- Objects -->
+      <div class="ob fo" onclick="showCt('ct-fogata')"><div class="fo-gl"></div><div class="fo-f"><div class="flo"></div><div class="fli"></div></div><div class="fo-logs"><div class="fl-lg" style="width:32px;transform:rotate(10deg);"></div><div class="fl-lg" style="width:28px;transform:rotate(-8deg);margin-top:-2px;"></div></div><div class="fo-st"><div class="fss"></div><div class="fss" style="width:7px;"></div><div class="fss"></div><div class="fss" style="width:7px;"></div></div><div class="ob-l" style="color:rgba(255,150,80,0.6);">Fogata</div></div>
+      <div class="ob ch" onclick="showCt('ct-char')"><div style="position:relative;width:36px;height:56px;"><div class="ch-hr"></div><div class="ch-hd"></div><div class="ch-cl"></div><div class="ch-sf"></div><div class="ch-or"></div></div><div class="ob-l" style="color:rgba(100,140,255,0.6);">Kael</div></div>
+      <div class="ob cr" onclick="showCt('ct-cron')"><div class="cr-bk"><div class="cr-bk-t">Crónicas</div></div><div class="ob-l" style="color:rgba(220,200,170,0.6);">Crónicas</div></div>
+      <div class="ob pa" onclick="showCt('ct-pacto')"><div class="pa-b"><div class="pa-w"></div></div><div class="ob-l" style="color:rgba(210,195,170,0.6);">Pacto</div></div>
+      <div class="ob fri here" onclick="go('d-turn')"><div style="position:relative;"><div class="fri-hr"></div><div class="fri-hd"></div><div class="fri-bd"></div><div class="fri-nt"></div></div><div class="ob-l" style="color:rgba(200,180,255,0.6);">Frieren</div></div>
+
+      <div class="vig"></div><div class="grn"></div>
+    </div>
+
+    <div class="hb" onclick="alert('Menú: Fogata · Kael · Crónicas · Pacto · Nosotros · Config')"><span></span><span></span><span></span></div>
+
+    <!-- Camp overlays -->
+    <div class="ct" id="ct-fogata"><div class="ct-x" onclick="hideCt()">✕</div><div class="where w-on">Fogata</div><h2>Fogata</h2><div class="sub">Registrá tus rituales del día.</div><div class="rc done" onclick="this.classList.toggle('done')"><div class="rc-ck">✓</div><div class="rc-info"><div class="rc-n">🌙 Acostarme antes de las 23h</div></div></div><div class="rc done" onclick="this.classList.toggle('done')"><div class="rc-ck">✓</div><div class="rc-info"><div class="rc-n">📵 Sin pantallas 1h antes</div></div></div><div class="rc" onclick="this.classList.toggle('done')"><div class="rc-ck"></div><div class="rc-info"><div class="rc-n">☕ Sin cafeína después de 14h</div></div></div><div style="font-family:'DM Mono',monospace;font-size:0.45rem;color:rgba(255,255,255,0.08);text-align:center;margin-top:8px;">2 de 3 registrados</div></div>
+
+    <div class="ct" id="ct-char"><div class="ct-x" onclick="hideCt()">✕</div><div class="where w-ch">Kael</div><h2>Kael</h2>
+      <div class="sh"><div class="sh-l">Identidad</div><div class="sh-id">"Soy alguien que cuida lo que come y cómo se mueve."</div><div style="margin-top:4px;font-size:0.65rem;color:rgba(255,255,255,0.15);">Mago · Misión: Sueño · Arco 1, Sem 2</div></div>
+      <div class="sh" style="text-align:center;"><div class="stats-r"><div><div class="stats-p">62</div><div class="stats-pl">Poder</div></div></div><div class="sr"><div class="si"><div class="sv" style="color:#6aff6a;">75</div><div class="sl">VIT</div></div><div class="si"><div class="sv" style="color:#ff6a6a;">45</div><div class="sl">STR</div></div><div class="si"><div class="sv" style="color:#6ab4ff;">82</div><div class="sl">INT</div></div><div class="si"><div class="sv" style="color:#ffc86a;">68</div><div class="sl">STA</div></div></div><div style="font-size:0.5rem;color:rgba(255,255,255,0.08);">🔥 6 días de racha</div></div>
+      <div class="sh"><div class="sh-l">Rituales</div><div class="rc"><div class="rc-ck"></div><div class="rc-info"><div class="rc-n">🌙 Acostarme 23h</div><div class="rc-m">22:45 · Habitación · Racha 6d</div><div class="cal"><div class="cd cd-ok">✓</div><div class="cd cd-ok">✓</div><div class="cd cd-ok">✓</div><div class="cd cd-x">✕</div><div class="cd cd-ok">✓</div><div class="cd cd-ok">✓</div><div class="cd cd-t">?</div></div></div></div><div class="rc"><div class="rc-ck"></div><div class="rc-info"><div class="rc-n">📵 Sin pantallas 1h</div><div class="rc-m">22:00 · Living · Racha 4d</div><div class="cal"><div class="cd cd-ok">✓</div><div class="cd cd-x">✕</div><div class="cd cd-x">✕</div><div class="cd cd-ok">✓</div><div class="cd cd-ok">✓</div><div class="cd cd-ok">✓</div><div class="cd cd-t">?</div></div></div></div></div>
+    </div>
+
+    <div class="ct" id="ct-cron"><div class="ct-x" onclick="hideCt()">✕</div><div class="where w-cr">Crónicas</div>
+      <div class="crp-cur"><div class="crp-cur-l">Tu turno — Día 12</div><div class="crp-cur-t">"El camino se divide en dos. El sendero corto cruza el bosque de los espíritus. El largo rodea la montaña. ¿Qué decide Kael?"</div></div>
+      <button class="btn btn-p" onclick="go('d-turn')" style="margin-bottom:12px;padding:10px;font-size:0.8rem;">Escribir tu decisión</button>
+      <div class="crp"><div class="crp-h"><div class="crp-m">Crónicas de Valdris</div><div class="crp-s">Arco 1: Sueño · Semana 2</div></div>
+        <div class="crp-a"><div class="crp-img">[ ilustración ]</div><div class="crp-d">Día 11 — Lyra</div><div class="crp-t">La torre entre la bruma</div><div class="crp-tx">"Lyra no dudó. Tomó el camino del río. Cruzaron al atardecer, empapados pero enteros."</div></div>
+        <div class="crp-a"><div class="crp-d">Día 10 — Kael</div><div class="crp-t">El herbolario cerrado</div><div class="crp-tx">"Kael llegó buscando provisiones. El herbolario había cerrado. Algo se estaba apretando."</div></div>
+        <div class="crp-a"><div class="crp-img">[ ilustración ]</div><div class="crp-d">Día 9 — Lyra</div><div class="crp-t">La noche en las montañas</div><div class="crp-tx">"Acamparon temprano. Ninguno habló. No hacía falta."</div></div>
+      </div>
+    </div>
+
+    <div class="ct" id="ct-pacto"><div class="ct-x" onclick="hideCt()">✕</div><div class="where w-pa">Pacto</div><h2>Juramento</h2><div class="sub">Semana 2 · Arco 1</div>
+      <div style="background:rgba(230,218,195,0.03);border:1px solid rgba(210,195,170,0.05);border-radius:4px;padding:14px 12px;">
+        <div class="pq"><div class="pq-l">1. Obstáculos</div><div style="font-size:0.68rem;color:rgba(255,255,255,0.2);font-style:italic;">"Jueves cena, viernes viajo temprano."</div></div>
+        <div class="pq"><div class="pq-l">2. Plan</div><div style="font-size:0.68rem;color:rgba(255,255,255,0.2);font-style:italic;">"Pantallas off apenas llego de la cena."</div></div>
+        <div class="pq"><div class="pq-l">3. Apoyo mutuo</div><div style="font-size:0.68rem;color:rgba(255,255,255,0.2);font-style:italic;">"Lyra me manda mensaje 22:30."</div></div>
+        <div class="pq"><div class="pq-l">4. Opcional</div><div style="font-size:0.68rem;color:rgba(255,255,255,0.2);font-style:italic;">"Leer un capítulo antes de dormir."</div></div>
+        <div style="text-align:center;margin-top:10px;padding-top:8px;border-top:1px solid rgba(210,195,170,0.03);"><div style="display:inline-block;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle,#8b2020,#5a1010);box-shadow:0 0 5px rgba(139,32,32,0.2);"></div><div style="font-family:'DM Mono',monospace;font-size:0.4rem;color:rgba(210,195,170,0.12);margin-top:3px;">Kael ✓ · Lyra ✓ · 5 días restantes</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== DAILY: TU TURNO ==================== -->
+  <div class="scr" id="d-turn">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 40%,rgba(170,130,255,0.06),transparent 50%),linear-gradient(180deg,#0a0a14,#14102a 50%,#0a0a14);"></div>
+    <div class="where w-fr">Frieren · Tu turno</div>
+    <div class="lbl">Día 12</div>
+    <div class="nar" style="margin-bottom:1rem;">"El camino hacia la torre se divide en dos. El sendero de la izquierda es más corto pero cruza el bosque donde los espíritus del hambre confunden la mente de los viajeros débiles. El de la derecha rodea la montaña — tres días más de marcha.<br><br>¿Qué decide Kael?"</div>
+    <div class="sub" style="font-size:0.58rem;color:rgba(170,130,255,0.25);">Lyra escribe mañana. Tus rituales registrados alimentan los stats.</div>
+    <textarea class="inp" placeholder="Tu decisión (1-2 oraciones)..." style="margin-bottom:0.75rem;">Kael toma el camino corto. Confía en que su mente está clara.</textarea>
+    <button class="btn btn-p" onclick="go('d-result')">Confirmar decisión</button>
+    <button class="btn btn-s" onclick="go('camp')">Volver al campamento</button>
+  </div>
+
+  <!-- DAILY: RESULTADO -->
+  <div class="scr" id="d-result">
+    <div class="bg" style="background:linear-gradient(180deg,#0a0a14,#121220 50%,#0a0a14);"></div>
+    <div class="where w-cr">Crónicas · Consecuencia</div>
+    <div class="lbl">Día 12 — Resultado</div>
+    <div style="flex:1;display:flex;align-items:center;">
+      <div class="nar">"El bosque los recibió en silencio. Los espíritus estaban ahí — Kael los sintió rozar su mente, buscando un hueco. No encontraron hambre real. La semana había sido buena en ese sentido.<br><br>Pero las piernas pesaban más de lo esperado en el tercer kilómetro. Llegaron al otro lado. Más lentos de lo que Kael hubiera querido admitir."</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.45rem;color:rgba(255,255,255,0.08);text-align:center;margin-bottom:0.5rem;">INT alta → mente clara. STR baja → costo físico.</div>
+    <button class="btn btn-p" onclick="go('camp')">Volver al campamento</button>
+  </div>
+
+  <!-- DAILY: NO ES TU TURNO -->
+  <div class="scr" id="d-noturn">
+    <div class="bg" style="background:linear-gradient(180deg,#0a0a14,#121220 50%,#0a0a14);"></div>
+    <div class="where w-cr">Crónicas · Turno de Lyra</div>
+    <div class="lbl">Día 13</div>
+    <div style="flex:1;display:flex;align-items:center;">
+      <div class="nar">"Lyra eligió rodear la montaña. El camino largo, pero seguro. Los tres días se hicieron más cortos de lo esperado — algo en el aire de la montaña invitaba a caminar.<br><br>Al tercer atardecer, la torre apareció entre la bruma. Más cerca de lo que imaginaban."</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.45rem;color:rgba(255,255,255,0.08);text-align:center;margin-bottom:0.5rem;">Mañana es tu turno. Registrá tus rituales en la Fogata.</div>
+    <button class="btn btn-p" onclick="go('camp')">Volver al campamento</button>
+  </div>
+
+  <!-- ==================== DOMINGO ==================== -->
+
+  <!-- SUN-0: Cierre semanal -->
+  <div class="scr" id="sun-0">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 60%,rgba(255,120,40,0.05),transparent 50%),linear-gradient(180deg,#0a0a14,#1a1020 50%,#0a0a14);"></div>
+    <div class="spg"><div class="spg-s on"></div><div class="spg-s"></div><div class="spg-s"></div><div class="spg-s"></div></div>
+    <div class="where w-cr">Crónicas · Cierre semanal</div>
+    <div class="lbl">Semana 2 · Domingo</div>
+    <div style="flex:1;display:flex;align-items:center;">
+      <div class="nar">"La segunda semana en las montañas del norte terminó distinta a como empezó. Kael dormía mejor — eso se notaba en cómo caminaba. Lyra lo observó una tarde y no dijo nada. No hacía falta.<br><br>El herbolario del pueblo había reabierto. Los espíritus del bosque estaban más quietos. Algo en Valdris estaba cambiando."</div>
+    </div>
+    <button class="btn btn-p" onclick="go('sun-1')">Continuar</button>
+  </div>
+
+  <!-- SUN-1: Boss — escribir decisión -->
+  <div class="scr" id="sun-1">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 40%,rgba(233,69,96,0.06),transparent 50%),linear-gradient(180deg,#0a0a14,#1a0a1a 50%,#0a0a14);"></div>
+    <div class="spg"><div class="spg-s dn"></div><div class="spg-s on"></div><div class="spg-s"></div><div class="spg-s"></div></div>
+    <div class="where w-fr">Frieren · Boss semanal</div>
+    <div class="lbl">Todas las semanas · Los dos escriben por separado</div>
+    <div class="nar" style="margin-bottom:1rem;">"La puerta de la torre norte se abrió al amanecer. Adentro, algo esperaba — no con hostilidad, sino con la paciencia de quien lleva siglos evaluando a los que llegan.<br><br>¿Qué decide Kael?"</div>
+    <div style="font-size:0.6rem;color:rgba(233,120,140,0.25);margin-bottom:0.5rem;">Lyra escribe su decisión por separado, sin ver la tuya.</div>
+    <textarea class="inp" placeholder="Tu decisión (1-2 oraciones)...">Kael entra primero. Confía en que su mente está clara.</textarea>
+    <button class="btn btn-e" onclick="go('sun-2')">Confirmar decisión</button>
+  </div>
+
+  <!-- SUN-2: Boss resultado -->
+  <div class="scr" id="sun-2">
+    <div class="bg" style="background:radial-gradient(ellipse at 50% 40%,rgba(233,69,96,0.06),transparent 50%),linear-gradient(180deg,#0a0a14,#1a0a1a 50%,#0a0a14);"></div>
+    <div class="spg"><div class="spg-s dn"></div><div class="spg-s dn"></div><div class="spg-s on"></div><div class="spg-s"></div></div>
+    <div class="where w-fr">Boss · Resultado</div>
+    <div class="res res-g">
+      <div class="lbl" style="color:rgba(106,255,106,0.25);">Stats verdes → Victoria</div>
+      <div class="nar">"Kael entró primero. Lyra flanqueó por la izquierda. El guardián los midió. Encontró claridad donde esperaba confusión.<br><br>La torre se abrió. El camino hacia el valle del sur quedó despejado."</div>
+    </div>
+    <div style="font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(255,255,255,0.07);text-align:center;margin:0.5rem 0;">Fusión: decisiones compatibles · Stats: verde</div>
+    <div style="flex:1;"></div>
+    <button class="btn btn-p" onclick="go('sun-3')">Continuar al pacto</button>
+  </div>
+
+  <!-- SUN-3: Pacto — 4 preguntas -->
+  <div class="scr" id="sun-3">
+    <div class="bg" style="background:linear-gradient(180deg,#0a0a14,#12100e 50%,#0a0a0a);"></div>
+    <div class="spg"><div class="spg-s dn"></div><div class="spg-s dn"></div><div class="spg-s dn"></div><div class="spg-s on"></div></div>
+    <div class="where w-pa">Pacto · Semana 3</div>
+    <h2>El pacto</h2>
+    <div class="sub">Respondé las 4 preguntas. Lyra responde las suyas por separado.</div>
+    <div class="pq"><div class="pq-l">1. Obstáculos</div><textarea class="pq-i" placeholder="¿Qué puede dificultar tus rituales?">Semana tranquila. Sin viajes.</textarea></div>
+    <div class="pq"><div class="pq-l">2. Plan</div><textarea class="pq-i" placeholder="¿Cómo manejás esos obstáculos?">Mantener el ritual sin cambios.</textarea></div>
+    <div class="pq"><div class="pq-l">3. Apoyo mutuo</div><textarea class="pq-i" placeholder="¿Cómo se sostienen?">Misma dinámica. Mensaje 22:30.</textarea></div>
+    <div class="pq"><div class="pq-l">4. Opcional</div><textarea class="pq-i" placeholder="¿Algo extra esta semana?">Dormir 8hs al menos 3 noches.</textarea></div>
+    <button class="btn btn-w" onclick="go('sun-4')">Firmar</button>
+  </div>
+
+  <!-- SUN-4: Firma + esperar -->
+  <div class="scr" id="sun-4">
+    <div class="bg" style="background:linear-gradient(180deg,#0a0a14,#12100e 50%,#0a0a0a);"></div>
+    <div class="spg"><div class="spg-s dn"></div><div class="spg-s dn"></div><div class="spg-s dn"></div><div class="spg-s dn"></div></div>
+    <div class="where w-pa">Pacto · Firma</div>
+    <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;">
+      <div class="seal"></div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.5rem;color:rgba(210,195,170,0.2);margin-top:10px;">Tu firma fue registrada</div>
+      <div style="font-size:0.68rem;color:rgba(255,255,255,0.15);margin-top:1.5rem;line-height:1.5;">Esperando que Lyra complete su parte.<br>Cuando los dos firmen, el pacto se sella.</div>
+      <div style="font-family:'DM Mono',monospace;font-size:0.42rem;color:rgba(255,255,255,0.06);margin-top:1.5rem;">Kael ✓ · Lyra pendiente</div>
+    </div>
+    <button class="btn btn-p" onclick="go('camp')" style="background:rgba(255,255,255,0.02);border-color:rgba(255,255,255,0.04);color:rgba(255,255,255,0.15);">Volver al campamento</button>
+  </div>
+
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.map-btn').forEach(b=>b.classList.remove('on'));
+  const map=document.querySelectorAll('.map-btn');
+  const idx={
+    'ob-0':0,'ob-1':1,'ob-2':2,'ob-3':3,'ob-4':4,'ob-5':5,'ob-6':6,
+    'camp':7,'d-turn':8,'d-result':8,'d-noturn':9,'sun-0':10,'sun-1':10,'sun-2':10,'sun-3':10,'sun-4':10
+  };
+  if(idx[id]!==undefined&&map[idx[id]])map[idx[id]].classList.add('on');
+  hideCt();
+}
+function sA(el){document.querySelectorAll('.ac').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function sC(el){document.querySelectorAll('.och').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function sI(el){document.querySelectorAll('.inv').forEach(c=>c.classList.remove('sel'));el.classList.add('sel');}
+function showCt(id){document.getElementById(id).classList.add('show');}
+function hideCt(){document.querySelectorAll('.ct').forEach(c=>c.classList.remove('show'));}
+</script>
+</body>
+</html>
