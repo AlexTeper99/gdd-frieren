@@ -9,6 +9,7 @@ import {
   time,
   jsonb,
   pgEnum,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
@@ -19,6 +20,11 @@ export const archetypeEnum = pgEnum("archetype", [
   "mago",
   "guerrero",
   "sacerdote",
+]);
+
+export const storyEntryTypeEnum = pgEnum("story_entry_type", [
+  "prologo",
+  "diario",
 ]);
 
 // --- Auth tables (existing, unchanged) ---
@@ -105,47 +111,66 @@ export const rituals = pgTable("rituals", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const ritualLogs = pgTable("ritual_logs", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  ritualId: text("ritual_id")
-    .notNull()
-    .references(() => rituals.id, { onDelete: "cascade" }),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  fecha: date("fecha").notNull(),
-  cumplido: boolean("cumplido").notNull(),
-});
+export const ritualLogs = pgTable(
+  "ritual_logs",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    ritualId: text("ritual_id")
+      .notNull()
+      .references(() => rituals.id, { onDelete: "cascade" }),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    fecha: date("fecha").notNull(),
+    cumplido: boolean("cumplido").notNull(),
+  },
+  (table) => [
+    uniqueIndex("ritual_logs_ritual_fecha").on(table.ritualId, table.fecha),
+  ]
+);
 
-export const storyEntries = pgTable("story_entries", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  userId: text("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  fecha: date("fecha").notNull(),
-  turnoNumero: integer("turno_numero").notNull(),
-  textoJugador: text("texto_jugador"),
-  textoIa: text("texto_ia"),
-  snapshotJ1: jsonb("snapshot_j1"),
-  snapshotJ2: jsonb("snapshot_j2"),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const storyEntries = pgTable(
+  "story_entries",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: text("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    fecha: date("fecha").notNull(),
+    turnoNumero: integer("turno_numero").notNull(),
+    tipo: storyEntryTypeEnum("tipo").default("diario").notNull(),
+    textoJugador: text("texto_jugador"),
+    textoIa: text("texto_ia"),
+    snapshotJ1: jsonb("snapshot_j1"),
+    snapshotJ2: jsonb("snapshot_j2"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("story_entries_turno_unique").on(table.turnoNumero),
+  ]
+);
 
-export const pacts = pgTable("pacts", {
-  id: text("id")
-    .primaryKey()
-    .$defaultFn(() => crypto.randomUUID()),
-  semana: date("semana").notNull(),
-  respuestasJ1: jsonb("respuestas_j1"),
-  respuestasJ2: jsonb("respuestas_j2"),
-  firmadoJ1: boolean("firmado_j1").default(false).notNull(),
-  firmadoJ2: boolean("firmado_j2").default(false).notNull(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+export const pacts = pgTable(
+  "pacts",
+  {
+    id: text("id")
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    semana: date("semana").notNull(),
+    respuestasJ1: jsonb("respuestas_j1"),
+    respuestasJ2: jsonb("respuestas_j2"),
+    firmadoJ1: boolean("firmado_j1").default(false).notNull(),
+    firmadoJ2: boolean("firmado_j2").default(false).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [
+    uniqueIndex("pacts_semana_unique").on(table.semana),
+  ]
+);
 
 export const pushSubscriptions = pgTable("push_subscriptions", {
   id: text("id")
