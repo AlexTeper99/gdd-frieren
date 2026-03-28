@@ -55,6 +55,16 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
 
   return (
     <div className="flex flex-col gap-4">
+      {/* Empty state — first time */}
+      {!lastEntry && entries.length === 0 && (
+        <div className="flex flex-col items-center gap-3 py-12 text-center">
+          <p className="text-lg font-semibold">Tu aventura comienza</p>
+          <p className="text-sm text-hq-text-muted">
+            Escribí la primera entrada de la historia de Valdris.
+          </p>
+        </div>
+      )}
+
       {isMyTurn ? (
         <span className="inline-block w-fit rounded-full border border-green-500/25 bg-green-500/10 px-3 py-1 text-xs font-semibold text-green-400">
           Tu turno de escribir
