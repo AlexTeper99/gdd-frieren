@@ -11,7 +11,12 @@ export default async function StoryPage() {
       <a href="/" className="mb-3 text-xs opacity-30 hover:opacity-60">
         ← Home
       </a>
-      <h1 className="mb-4 text-2xl font-bold">Historia</h1>
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Historia</h1>
+        <a href="/story/archive" className="text-xs text-hq-purple hover:underline">
+          Leer novela completa →
+        </a>
+      </div>
       <StoryView
         isMyTurn={storyState.isMyTurn}
         lastEntry={storyState.lastEntry}
