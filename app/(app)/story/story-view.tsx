@@ -52,12 +52,17 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
       )}
 
       {/* Previous entry */}
-      {lastEntry?.textoIa && (
+      {lastEntry && (lastEntry.textoJugador || lastEntry.textoIa) && (
         <>
           <p className="font-mono text-[10px] uppercase opacity-20">
             Turno {lastEntry.turnoNumero} · {lastEntry.autorNombre}
           </p>
-          {lastEntry.textoIa.split("\n\n").map((p, i) => (
+          {lastEntry.textoJugador && (
+            <div className="rounded-r-lg border-l-2 border-blue-500/20 bg-blue-500/5 p-3 text-sm leading-relaxed opacity-70">
+              {lastEntry.textoJugador}
+            </div>
+          )}
+          {lastEntry.textoIa && lastEntry.textoIa.split("\n\n").map((p, i) => (
             <div
               key={i}
               className="rounded-r-lg border-l-2 border-purple-500/15 bg-purple-500/5 p-3 font-serif text-sm italic leading-relaxed opacity-75"
@@ -122,6 +127,11 @@ export function StoryView({ isMyTurn, lastEntry, entries }: Props) {
               <p className="font-mono text-[10px] uppercase opacity-50">
                 Turno {e.turnoNumero} · {e.autorNombre}
               </p>
+              {e.textoJugador && (
+                <div className="rounded-r-lg border-l-2 border-blue-500/10 bg-blue-500/5 p-3 text-xs leading-relaxed opacity-60">
+                  {e.textoJugador.slice(0, 100)}...
+                </div>
+              )}
               <div className="rounded-r-lg border-l-2 border-purple-500/10 bg-purple-500/5 p-3 font-serif text-xs italic leading-relaxed">
                 {(e.textoIa ?? "").slice(0, 200)}...
               </div>
