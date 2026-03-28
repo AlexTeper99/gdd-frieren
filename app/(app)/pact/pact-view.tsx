@@ -29,7 +29,7 @@ export function PactView({
 }: Props) {
   const isSealed = iSigned && otherSigned;
 
-  const [, action, pending] = useActionState(
+  const [state, action, pending] = useActionState(
     (_prev: unknown, formData: FormData) => submitPactAnswers(formData),
     null
   );
@@ -77,6 +77,11 @@ export function PactView({
 
   return (
     <form action={action} className="flex flex-col gap-4">
+      {state?.error && (
+        <div className="rounded-lg border border-hq-red-border bg-hq-red-bg p-3 text-sm text-hq-red">
+          {state.error}
+        </div>
+      )}
       {QUESTIONS.map((q, i) => (
         <div key={q.key}>
           <div className="font-mono text-[10px] opacity-25">{i + 1}/4</div>
