@@ -2,11 +2,22 @@
 
 import { db } from "@/features/shared/db";
 import { storyEntries, users } from "@/features/shared/db/schema";
-import { desc, eq, asc } from "drizzle-orm";
+import { desc, eq, asc, and } from "drizzle-orm";
+import { getLocalDate } from "@/features/shared/constants";
 
 const TURN_TIMEOUT_MS = 24 * 60 * 60 * 1000; // 24 hours
 
 export async function getStoryState(userId: string) {
+  const today = getLocalDate();
+
+  // Check if anyone already wrote a diario entry TODAY
+  const [todayDiarioEntry] = await db
+    .select()
+    .from(storyEntries)
+    .where(and(eq(storyEntries.tipo, "diario"), eq(storyEntries.fecha, today)))
+    .limit(1);
+
+  // Get last diario entry (any day) for turn detection
   const [lastDiarioEntry] = await db
     .select()
     .from(storyEntries)
@@ -16,11 +27,15 @@ export async function getStoryState(userId: string) {
 
   let isMyTurn: boolean;
 
-  if (!lastDiarioEntry) {
+  if (todayDiarioEntry) {
+    // Someone already wrote today — no more turns until tomorrow
+    isMyTurn = false;
+  } else if (!lastDiarioEntry) {
     isMyTurn = true;
   } else if (lastDiarioEntry.userId !== userId) {
     isMyTurn = true;
   } else {
+    // Last entry was mine — auto-pass after 24h
     const entryAge = Date.now() - new Date(lastDiarioEntry.createdAt).getTime();
     isMyTurn = entryAge > TURN_TIMEOUT_MS;
   }
