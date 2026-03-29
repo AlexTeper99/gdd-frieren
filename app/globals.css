@@ -46,6 +46,30 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  --color-hq-bg: var(--hq-bg);
+  --color-hq-bg-card: var(--hq-bg-card);
+  --color-hq-bg-card-hover: var(--hq-bg-card-hover);
+  --color-hq-text: var(--hq-text);
+  --color-hq-text-muted: var(--hq-text-muted);
+  --color-hq-text-faint: var(--hq-text-faint);
+  --color-hq-border: var(--hq-border);
+  --color-hq-border-hover: var(--hq-border-hover);
+  --color-hq-purple: var(--hq-purple);
+  --color-hq-purple-bg: var(--hq-purple-bg);
+  --color-hq-purple-border: var(--hq-purple-border);
+  --color-hq-green: var(--hq-green);
+  --color-hq-green-bg: var(--hq-green-bg);
+  --color-hq-green-border: var(--hq-green-border);
+  --color-hq-red: var(--hq-red);
+  --color-hq-red-bg: var(--hq-red-bg);
+  --color-hq-red-border: var(--hq-red-border);
+  --color-hq-blue: var(--hq-blue);
+  --color-hq-blue-bg: var(--hq-blue-bg);
+  --color-hq-blue-border: var(--hq-blue-border);
+  --color-hq-amber: var(--hq-amber);
+  --color-hq-amber-bg: var(--hq-amber-bg);
+  --color-hq-amber-border: var(--hq-amber-border);
 }
 
 :root {
@@ -115,6 +139,31 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+
+  /* Habit Quest design tokens */
+  --hq-bg: #0a0a0f;
+  --hq-bg-card: rgba(255, 255, 255, 0.03);
+  --hq-bg-card-hover: rgba(255, 255, 255, 0.06);
+  --hq-text: #e8e4df;
+  --hq-text-muted: rgba(255, 255, 255, 0.4);
+  --hq-text-faint: rgba(255, 255, 255, 0.15);
+  --hq-border: rgba(255, 255, 255, 0.08);
+  --hq-border-hover: rgba(255, 255, 255, 0.15);
+  --hq-purple: #aa82ff;
+  --hq-purple-bg: rgba(170, 130, 255, 0.08);
+  --hq-purple-border: rgba(170, 130, 255, 0.25);
+  --hq-green: #4caf50;
+  --hq-green-bg: rgba(76, 175, 80, 0.08);
+  --hq-green-border: rgba(76, 175, 80, 0.25);
+  --hq-red: #ef5350;
+  --hq-red-bg: rgba(239, 83, 80, 0.08);
+  --hq-red-border: rgba(239, 83, 80, 0.15);
+  --hq-blue: #42a5f5;
+  --hq-blue-bg: rgba(66, 165, 245, 0.1);
+  --hq-blue-border: rgba(66, 165, 245, 0.25);
+  --hq-amber: #ffb74d;
+  --hq-amber-bg: rgba(255, 183, 77, 0.08);
+  --hq-amber-border: rgba(255, 183, 77, 0.25);
 }
 
 @layer base {

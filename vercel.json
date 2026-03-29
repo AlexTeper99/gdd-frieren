@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/daily-penalty",
+      "schedule": "0 3 * * *"
+    }
+  ]
+}
