@@ -54,3 +54,27 @@ export function getLocalDayIndex(): number {
   };
   return map[day] ?? 1;
 }
+
+export function getYesterdayDate(): string {
+  const now = new Date();
+  const localNow = new Date(
+    now.toLocaleString("en-US", { timeZone: USER_TIMEZONE })
+  );
+  localNow.setDate(localNow.getDate() - 1);
+  return localNow.toLocaleDateString("en-CA");
+}
+
+export function getDayFromDate(dateStr: string): DayOfWeek {
+  const date = new Date(dateStr + "T12:00:00");
+  const dayName = date.toLocaleDateString("en-US", { weekday: "short" });
+  const map: Record<string, DayOfWeek> = {
+    Sun: "dom",
+    Mon: "lun",
+    Tue: "mar",
+    Wed: "mie",
+    Thu: "jue",
+    Fri: "vie",
+    Sat: "sab",
+  };
+  return map[dayName] ?? "lun";
+}

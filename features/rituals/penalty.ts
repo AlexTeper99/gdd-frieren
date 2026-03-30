@@ -6,13 +6,13 @@ import { eq, and } from "drizzle-orm";
 import {
   HP_PENALTY,
   HP_RESET_ON_ZERO,
-  getLocalDate,
-  getLocalDay,
+  getYesterdayDate,
+  getDayFromDate,
 } from "@/features/shared/constants";
 
-export async function penalizeUncompletedRituals() {
-  const today = getLocalDate();
-  const todayDay = getLocalDay();
+export async function penalizeUncompletedRituals(targetDate?: string) {
+  const date = targetDate ?? getYesterdayDate();
+  const day = getDayFromDate(date);
 
   const allUsers = await db.select().from(users);
   const results: { userId: string; status: string; hpLoss: number }[] = [];
@@ -26,15 +26,16 @@ export async function penalizeUncompletedRituals() {
         .from(rituals)
         .where(and(eq(rituals.userId, user.id), eq(rituals.activo, true)));
 
-      const todayRituals = userRituals.filter((r) =>
-        r.dias.includes(todayDay)
+      const targetDateEnd = new Date(date + "T23:59:59");
+      const todayRituals = userRituals.filter(
+        (r) => r.dias.includes(day) && r.createdAt <= targetDateEnd
       );
 
       const logs = await db
         .select()
         .from(ritualLogs)
         .where(
-          and(eq(ritualLogs.userId, user.id), eq(ritualLogs.fecha, today))
+          and(eq(ritualLogs.userId, user.id), eq(ritualLogs.fecha, date))
         );
 
       const completedIds = new Set(
@@ -56,7 +57,7 @@ export async function penalizeUncompletedRituals() {
             await db.insert(ritualLogs).values({
               ritualId: ritual.id,
               userId: user.id,
-              fecha: today,
+              fecha: date,
               cumplido: false,
             });
           } catch {
@@ -88,5 +89,5 @@ export async function penalizeUncompletedRituals() {
     }
   }
 
-  return { success: true, date: today, results };
+  return { success: true, date, results };
 }
